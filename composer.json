@@ -4,7 +4,7 @@
 	"keywords": ["hotspot management system"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.2.*",
+		"laravel/framework": "4.1.*",
 		"edvinaskrucas/notification": "2.*"
 	},
 	"autoload": {
