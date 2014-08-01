@@ -32,7 +32,7 @@
 		],
 		"post-create-project-cmd": [
 			"php laravel/artisan key:generate",
-			"chmod 777 -R app/storage"
+			"chmod 777 -R larave/app/storage"
 		]
 	},
 	"config": {
