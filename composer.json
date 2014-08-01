@@ -1,0 +1,42 @@
+{
+	"name": "access-manager/access-manager",
+	"description": "The Open Source Hotpsot Management System.",
+	"keywords": ["hotspot management system"],
+	"license": "MIT",
+	"require": {
+		"laravel/framework": "4.2.*",
+		"edvinaskrucas/notification": "2.*"
+	},
+	"autoload": {
+		"classmap": [
+			"laravel/app/commands",
+			"laravel/app/controllers",
+			"laravel/app/models",
+			"laravel/app/database/migrations",
+			"laravel/app/database/seeds",
+			"laravel/app/tests/TestCase.php",
+			"laravel/app/libraries"
+		],
+		"files"	:[
+			"laravel/app/helpers.php"
+		]
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"php laravel/artisan clear-compiled",
+			"php laravel/artisan optimize"
+		],
+		"post-update-cmd": [
+			"php laravel/artisan clear-compiled",
+			"php laravel/artisan optimize"
+		],
+		"post-create-project-cmd": [
+			"php laravel/artisan key:generate"
+		]
+	},
+	"config": {
+		"preferred-install": "dist",
+       		"vendor-dir" : "laravel/vendor"
+	},
+	"minimum-stability": "stable"
+}
