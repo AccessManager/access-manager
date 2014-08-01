@@ -31,7 +31,8 @@
 			"php laravel/artisan optimize"
 		],
 		"post-create-project-cmd": [
-			"php laravel/artisan key:generate"
+			"php laravel/artisan key:generate",
+			"chmod 777 -R app/storage"
 		]
 	},
 	"config": {
