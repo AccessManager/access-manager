@@ -3,6 +3,12 @@
 	"description": "The Open Source Hotpsot Management System.",
 	"keywords": ["hotspot management system"],
 	"license": "MIT",
+	"authors" : [
+			{
+				"name" : "Rahul Makhija",
+				"email" : "rahulmkhj@gmail.com"
+			}
+		],
 	"require": {
 		"laravel/framework": "4.1.*",
 		"edvinaskrucas/notification": "2.*"
