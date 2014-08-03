@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+include_once "laravel/vendor/autoload.php";
+
 use Symfony\Component\Console\Application;
 use AccessManager\Radius\Commands\AuthorizeCommand;
 use AccessManager\Radius\Commands\AccountCommand;
