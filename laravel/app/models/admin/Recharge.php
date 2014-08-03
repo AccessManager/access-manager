@@ -1,6 +1,7 @@
 <?php
 
-Class Recharge extends BaseModel {
+class Recharge extends BaseModel {
+
 	protected $table = 'user_recharges';
 	protected $fillable = ['user_id','voucher_id','recharged_on',
 							'time_limit','data_limit','expiration','sim_sessions','aq_access'];

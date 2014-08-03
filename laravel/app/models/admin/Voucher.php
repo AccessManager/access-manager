@@ -92,7 +92,6 @@ Class Voucher extends BaseModel {
 						$tpl[$t] = mikrotikRateLimit( $policy );
 					}
 				}
-				
 				$template = VoucherPolicySchemaTemplate::create( $tpl );
 				$schema[$d] = $template->id;
 			}

@@ -18,18 +18,15 @@ class PrepaidVouchers extends Migration {
 
 			$t->increments('id');
 			$t->integer('user_id')->unsigned();
-			// $t->integer('plan_id')->unsigned();
 			$t->bigInteger('pin')->unsigned();
 			$t->enum('method',['pin','online','admin'])->nullable();
 			$t->date('expires_on');
-			// $t->timestamp('created_at');
 			$t->timestamps();
 			$t->string('plan_name');
 			$t->tinyInteger('plan_type');
 			$t->integer('limit_id')->unsigned()->nullable();
 			$t->enum('policy_type',['Policy','PolicySchema']);
 			$t->integer('policy_id')->unsigned();
-			// $t->integer('schema_id')->unsigned();
 			$t->integer('sim_sessions')->unsigned();
 			$t->integer('interim_updates')->unsigned();
 			$t->float('price');
@@ -77,8 +74,6 @@ class PrepaidVouchers extends Migration {
 			$t->boolean('sec_allowed')->nullable();
 			$t->string('sec_policy')->nullable();
 			$t->boolean('sec_accountable');
-			// $t->timestamps();
-			// $t->softDeletes();
 		});
 
 		Schema::create('voucher_policy_schemas', function(Blueprint $t)
@@ -94,8 +89,6 @@ class PrepaidVouchers extends Migration {
 			$t->integer('fr')->unsigned();
 			$t->integer('sa')->unsigned();
 			$t->integer('su')->unsigned();
-			// $t->timestamps();
-			// $t->softDeletes();
 		});
 
 		Schema::create('user_recharges', function(Blueprint $t){
@@ -106,16 +99,13 @@ class PrepaidVouchers extends Migration {
 			$t->integer('user_id')->unsigned();
 			$t->integer('voucher_id')->unsigned()->nullable();
 			$t->datetime('recharged_on')->nullable();
-			// $t->enum('plan_type',[0,1]);
-			// $t->enum('limit_type',[0,1,2])->nullable();
 			$t->bigInteger('time_limit')->unsigned()->default(0);
 			$t->bigInteger('data_limit')->unsigned()->default(0);
 			$t->string('expiration',20);
-			// $t->integer('sim_sessions')->unsigned();
-			// $t->boolean('aq_access');
 			$t->boolean('aq_invocked');
-			$t->bigInteger('sess_time');
-			$t->bigInteger('sess_data');
+			$t->integer('active_tpl')->unsigned()->nullable();
+			// $t->bigInteger('sess_time');
+			// $t->bigInteger('sess_data');
 		});
 	}
 
