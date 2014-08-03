@@ -1,0 +1,12 @@
+#!/usr/bin/php
+<?php
+use Symfony\Component\Console\Application;
+use AccessManager\Radius\Commands\AuthorizeCommand;
+use AccessManager\Radius\Commands\AccountCommand;
+
+$app = new Applicatoin();
+$app->add(new AuthorizeCommand);
+$app->add(new AccountCommand);
+$app->run();
+
+//end of file radius

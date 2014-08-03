@@ -11,6 +11,7 @@
 		],
 	"require": {
 		"laravel/framework": "4.1.*",
+		"access-manager/am-radius" : "*",
 		"edvinaskrucas/notification": "2.*"
 	},
 	"autoload": {
