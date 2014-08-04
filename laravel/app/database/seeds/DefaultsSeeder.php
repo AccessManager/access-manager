@@ -16,27 +16,28 @@ Class DefaultsSeeder extends Seeder {
 	{
 		$accounts = [
 			[
-				'uname'		=>		'admin',
-				'pword'		=>		Hash::make('123456'),
-				'fname'		=>		'Admin',
-				'status'	=>		1,
-				'is_admin'	=>		1,
-				'created_at'=>		date('Y-m-d H:i:s'),
-				'updated_at'=>		date('Y-m-d H:i:s'),
+					 'uname'	=>		'admin',
+					 'pword'	=>		Hash::make('123456'),
+			   'clear_pword'	=>		'123456',
+				  	' fname'	=>		'Admin',
+					'status'	=>		1,
+				  'is_admin'	=>		1,
+				'created_at'	=>		date('Y-m-d H:i:s'),
+				'updated_at'	=>		date('Y-m-d H:i:s'),
 			],
 			[
-				'uname'		=>		'demo',
-			'clear_pword'	=>		'123456',
-				'pword'		=>		Hash::make('123456'),
-				'fname'		=>		'Demo',
-				'status'	=>		1,
-				'is_admin'	=>		0,
-				'created_at'=>		date('Y-m-d H:i:s'),
-				'updated_at'=>		date('Y-m-d H:i:s'),
+					 'uname'	=>		'demo',
+			   'clear_pword'	=>		'123456',
+					 'pword'	=>		Hash::make('123456'),
+				   	 'fname'	=>		'Demo',
+					'status'	=>		1,
+				  'is_admin'	=>		0,
+				'created_at'	=>		date('Y-m-d H:i:s'),
+				'updated_at'	=>		date('Y-m-d H:i:s'),
 			],
 		];
-		User::truncate();
-		User::insert($accounts);
+		Subscriber::truncate();
+		Subscriber::insert($accounts);
 	}
 
 	private function _seedSettings()
