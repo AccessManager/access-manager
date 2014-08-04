@@ -10,6 +10,7 @@
 			}
 		],
 	"require": {
+		"php" : ">=5.4",
 		"laravel/framework": "4.1.*",
 		"access-manager/am-radius" : "*",
 		"edvinaskrucas/notification": "2.*"
