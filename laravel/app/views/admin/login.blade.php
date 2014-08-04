@@ -59,12 +59,12 @@
                             <fieldset>
                                 <div class="form-group">
                                     <label for="" class="control-label">User Name:  </label>
-                                    {{Form::text('uname', 'admin', ['class'=>'col-lg-2 form-control',
+                                    {{Form::text('uname', NULL, ['class'=>'col-lg-2 form-control',
                                     'placeholder'=>'username'])}}
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="control-label">Password:  </label>
-                                    {{Form::input('password', 'pword', '123456', ['class'=>'form-control','placeholder'=>'password'])}}
+                                    {{Form::password('pword', ['class'=>'form-control','placeholder'=>'password'])}}
                                     <div class="checkbox">
                                         <label for="remember-me"> 
                                             <input type="checkbox" id='remember-me'>

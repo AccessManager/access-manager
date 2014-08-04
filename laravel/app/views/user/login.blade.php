@@ -18,8 +18,8 @@
 		@endif
 		{{Form::open(['route'=>'user.login','class'=>'form-signin form-horizontal','role'=>'form'])}}
         <h2 class="form-signin-heading">My Account - Login</h2>
-        {{Form::text('uname', 'demo', ['class'=>"form-control",'placeholder'=>'User Name','required','autofocus'])}}
-        {{Form::input('password', 'pword', '123456', ['class'=>'form-control','placeholder'=>'Password','required'])}}
+        {{Form::text('uname', NULL, ['class'=>"form-control",'placeholder'=>'User Name','required','autofocus'])}}
+        {{Form::password('pword', ['class'=>'form-control','placeholder'=>'password'])}}
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Remember me
         </label>

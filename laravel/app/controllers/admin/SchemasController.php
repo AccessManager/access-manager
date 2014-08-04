@@ -177,3 +177,5 @@ Class SchemasController extends AdminBaseController {
 		return $template;
 	}
 }
+
+//end of file SchemasController.php
