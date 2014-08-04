@@ -26,8 +26,8 @@ Class DefaultsSeeder extends Seeder {
 			],
 			[
 				'uname'		=>		'demo',
-			'clear_pword'	=>		123456,
-				'pword'		=>		Hash::make(123456),
+			'clear_pword'	=>		'123456',
+				'pword'		=>		Hash::make('123456'),
 				'fname'		=>		'Demo',
 				'status'	=>		1,
 				'is_admin'	=>		0,
