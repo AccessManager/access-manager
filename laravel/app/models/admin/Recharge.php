@@ -90,3 +90,5 @@ class Recharge extends BaseModel {
 			return TRUE;
 	}
 }
+
+//end of file Reacharge.php

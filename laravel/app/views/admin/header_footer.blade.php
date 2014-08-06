@@ -1,11 +1,12 @@
 <?php
-$dashboard = NULL;
+
+  $dashboard = NULL;
 $subscribers = NULL;
-$prepaid = NULL;
-$services = NULL;
-$customize = NULL;
-$network = NULL;
-$system = NULL;
+    $prepaid = NULL;
+   $services = NULL;
+  $customize = NULL;
+    $network = NULL;
+     $system = NULL;
 
 $segment = Request::segment(2);
 if( $segment == 'subscribers' && Request::segment(3) == 'active') {
@@ -32,8 +33,7 @@ if( $segment == 'settings' ) {
 
 ?>
 <!DOCTYPE html>
-<base href="{{Request::root().'/'}}" />
-<html ng-app='amAdmin'>
+<html>
     <head>
         <meta charset="UTF-8">
         <title>Access Manager</title>
@@ -45,7 +45,6 @@ if( $segment == 'settings' ) {
         {{HTML::style('public/css/custom.css')}}
     </head>
     <body>
-        
         <header>
             <nav class="nav navbar-inverse">
                 <div class="navbar-header">

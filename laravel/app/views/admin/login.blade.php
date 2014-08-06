@@ -23,23 +23,22 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=""><b>Access Manager</b></a>
+                    <b class='navbar-brand'>Access Manager</b>
                 </div>
-
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="" class="navbar-link">
+                            <a target='_blank' href="http://facebook.com/ManagerAccess" class="navbar-link">
                             <i class="fa fa-facebook"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="" class="navbar-link">
+                            <a target='_blank' href="http://twitter.com/AccessManager" class="navbar-link">
                             <i class="fa fa-twitter"></i>
                             </a> 
                         </li>
                         <li>
-                            <a href="" class="navbar-link">
+                            <a target='_blank' href="http://youtube.com/AccessManager" class="navbar-link">
                             <i class="fa fa-youtube"></i>
                             </a>
                         </li>
@@ -69,18 +68,22 @@
                                         <label for="remember-me"> 
                                             <input type="checkbox" id='remember-me'>
                                             Remember Me
+
                                         </label>
+
                                     </div>
                                 </div>
+                    
                                 <button class="btn btn-block btn-primary">Login</button>
+                                
                                 <div class="form-group">
                                     <div class="btn-toolbar">
                                         <div class="btn-group pull-right">
                                             <a href="#" class='btn btn-link'>Forgot Password?</a>
                                         </div>
                                     </div>
-                                    
                                 </div>
+                                <p class="text-danger">{{Session::get('error', NULL)}}</p>
                             </fieldset>
                         {{Form::close()}}
                     </div>

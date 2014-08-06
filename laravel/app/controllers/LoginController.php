@@ -17,7 +17,7 @@ Class LoginController extends AdminBaseController {
 			return Redirect::intended('user-panel');
 
 		Session::flash('error', "Invalid Credentials");
-		return Redirect::back();
+		return Redirect::back()->withInput();
 	}
 
 	public function getAdmin()
@@ -27,15 +27,14 @@ Class LoginController extends AdminBaseController {
 
 	public function postAdmin()
 	{
-		if( Auth::attempt(
-			[
-					'uname'	=>	Input::get('uname'),
+		if( Auth::attempt([
+				   'uname'	=>	Input::get('uname'),
 				'password'	=>	Input::get('pword'),
 				'is_admin'	=>	1
-			]) ) {
+			]) )
 			return Redirect::intended('admin-panel');
-		}
 
+		Session::flash('error', "Invalid Username/Password");
 		return Redirect::back()->withInput();
 	}
 
