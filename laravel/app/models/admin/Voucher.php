@@ -28,10 +28,9 @@ Class Voucher extends BaseModel {
 	public static function variables($ids)
 	{
 		return DB::table('prepaid_vouchers as v')
-					->select('v.pin','v.expires_on','sp.name AS plan_name','sp.plan_type','sp.validity',
-							'sp.validity_unit','sp.sim_sessions','sp.interim_updates','sp.price')
+					->select('v.pin','v.expires_on','v.plan_name','v.plan_type','v.validity',
+							'v.validity_unit','v.sim_sessions','v.interim_updates','v.price')
 					->whereIn('v.id',$ids)
-					->join('service_plans as sp','v.plan_id','=','sp.id')
 					->get();
 	}
 
