@@ -109,10 +109,9 @@ Class AccountsController extends AdminBaseController {
 	{
 		try{
 			DB::transaction(function() use($id) {
-				if( 
-					! Subscriber::destroy($id) || 
-					! Recharge::where('user_id',$id)->delete()
-				 ) throw new Exception("Account could not be deleted, please try again.");
+				if( ! Subscriber::destroy($id) ||
+					( Recharge::where('user_id',$id)->count() && ! Recharge::where('user_id',$id)->delete() )
+				) throw new Exception("Account could not be deleted, please try again.");
 			});
 			$this->notifySuccess("Account Successfully deleted.");
 			return Redirect::route(self::HOME);
