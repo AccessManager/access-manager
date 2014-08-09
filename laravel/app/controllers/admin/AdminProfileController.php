@@ -36,7 +36,31 @@ Class AdminProfileController extends AdminBaseController {
 	public function postChangePassword()
 	{
 		$input = Input::all();
+		$admin = Subscriber::findOrFail(Auth::user()->id)->first();
 
-		pr($input);
+		if( ! Hash::check($input['current'], $admin->pword) ) {
+			$this->notifyError("Invalid Current Password.");
+			return Redirect::back();
+		}
+			
+
+		$rules = Config::get('validations.admin_password', NULL);
+
+		$v = Validator::make($input, $rules);
+		if($v->fails() )
+			return Redirect::back()->withInput()->withErrors($v);
+
+		$admin->pword = Hash::make( $input['password'] );
+		$admin->clear_pword = $input['password'];
+
+		if( $admin->save() ) {
+			$this->notifySuccess("Admin Password Successfully Updated.");
+		} else {
+			$this->notifyError("Failed to update admin password, please try again..");
+		}
+		return Redirect::back();
 	}
+
 }
+
+//end of file AdminProfileController.php

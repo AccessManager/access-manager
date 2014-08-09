@@ -92,5 +92,10 @@ return [
 	'fr'			=>	['required','numeric','exists:policy_schema_templates,id'],
 	'sa'			=>	['required','numeric','exists:policy_schema_templates,id'],
 	'su'			=>	['required','numeric','exists:policy_schema_templates,id'],
+				],
+'admin_password'	=>	[
+	'current'		=>	['required'],
+	'password'		=>	['required',],
+	'confirm'		=>	['required','same:password'],
 				]
 ];

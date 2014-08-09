@@ -1,5 +1,14 @@
 <?php
 
+$config = Theme::first();
+		$themes = Config::get('themes');
+
+		$admin_theme = $themes[$config->admin_theme];
+		$user_theme = $themes[$config->user_theme];
+		
+		View::share('admin_theme', $admin_theme);
+		View::share('user_theme', $user_theme);
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -247,3 +256,6 @@ Form::macro('buttons', function($submit = 'Save Changes'){
           "</div>
         </div>";
 });
+
+
+//end of file routes.php
