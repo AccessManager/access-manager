@@ -3,7 +3,7 @@
 class Recharge extends BaseModel {
 
 	protected $table = 'user_recharges';
-	protected $fillable = ['user_id','voucher_id','recharged_on',
+	protected $fillable = ['user_id','voucher_id','recharged_on','aq_invocked',
 							'time_limit','data_limit','expiration','sim_sessions','aq_access'];
 	public $timestamps = false;
 

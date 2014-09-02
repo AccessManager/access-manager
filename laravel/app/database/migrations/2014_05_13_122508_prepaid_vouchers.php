@@ -99,8 +99,8 @@ class PrepaidVouchers extends Migration {
 			$t->integer('user_id')->unsigned();
 			$t->integer('voucher_id')->unsigned()->nullable();
 			$t->datetime('recharged_on')->nullable();
-			$t->bigInteger('time_limit')->unsigned()->nullable()->default(0);
-			$t->bigInteger('data_limit')->unsigned()->nullable()->default(0);
+			$t->bigInteger('time_limit')->nullable()->default(0);
+			$t->bigInteger('data_limit')->nullable()->default(0);
 			$t->string('expiration',20);
 			$t->boolean('aq_invocked');
 			$t->integer('active_tpl')->unsigned()->nullable();

@@ -60,7 +60,7 @@ class Radius extends Migration {
 				->nullable();
 			$t->integer('acctstopdelay')
 				->nullable();
-			$t->string('zascendsessionvrkey', 10)
+			$t->string('xascendsessionsvrkey', 10)
 				->nullable();
 				
 			$t->unique('acctuniqueid');
