@@ -11,6 +11,17 @@
 |
 */
 
+
+Route::get('json/get-ip-list/{id}',function($subnet_id){
+	$list = SubnetIP::where('subnet_id',$subnet_id)->lists('ip','id');
+	foreach($list as $id => $ip) {
+		$ips[$id] = long2ip($ip);
+	}
+	return Response::json($ips);
+});
+
+
+
 Route::get('/',[
 	'as'	=>		'welcome.user',
 	function(){
@@ -33,17 +44,9 @@ Route::post('admin/login',[
 	'uses'		=>		'LoginController@postAdmin',
 	]);
 
-// Route::get('admin/logout',[
-// 	'as'		=>		'admin.logout',
-// 	'uses'		=>		'LoginController@getAdminLogout'
-// 	]);
-
 Route::controller('/login','LoginController',[
 	'getIndex'		=>		'user.login.form',
 	'postLogin'		=>		'user.login',
-	// 'getAdmin'		=>		'admin.login.form',
-	// 'postAdmin'		=>		'admin.login',
-	// 'getAdminLogout'	=>		'admin.logout',
 	]);
 
 
@@ -135,8 +138,15 @@ Route::controller('subscribers', 'AccountsController',[
 			'postDelete'		=>		'subscriber.delete',
 			'getActive'			=>		'subscriber.active',
 			'getProfile'		=>		'subscriber.profile',
+			'getActiveServices'	=>		'subscriber.services',
+			'getAssignPlan'		=>		'subscriber.assign.form',
+			'postAssignPlan'	=>		'subscriber.assign',
 			'postResetPassword'	=>		'subscriber.reset.password',
 			'postRefill'		=>		'subscriber.refill',
+			'getAssignIP'		=>		'subscriber.ip.form',
+			'postAssignIP'		=>		'subscriber.ip',
+			'getAssignRoute'	=>		'subscriber.route.form',
+			'postAssignRoute'	=>		'subscriber.route',
 	]);
 
 Route::controller('prepaid-vouchers','VouchersController',[
@@ -149,6 +159,16 @@ Route::controller('prepaid-vouchers','VouchersController',[
 			'postPrint'			=>		'voucher.print',
 	]);
 
+Route::controller('refill-coupons','RefillController',[
+			'getIndex'			=>		'refill.index',
+			'getGenerate'		=>		'refill.generate.form',
+			'postGenerate'		=>		'refill.generate',
+			'getRecharge'		=>		'refill.recharge.form',
+			'postRecharge'		=>		'refill.recharge',
+			'postSelectTemplate'=>		'refill.handle',
+			'postPrint'			=>		'refill.print',
+	]);
+
 Route::controller('service-plans','ServicePlansController',[
 			'getIndex'			=>		'plan.index',
 			'getAdd'			=>		'plan.add.form',
@@ -156,6 +176,8 @@ Route::controller('service-plans','ServicePlansController',[
 			'getEdit'			=>		'plan.edit.form',
 			'postEdit'			=>		'plan.edit',
 			'postDelete'		=>		'plan.delete',
+			'getFreePlan'		=>		'plan.free.form',
+			'postFreePlan'		=>		'plan.free',
 	]);
 
 Route::controller('routers','RoutersController',[
@@ -165,6 +187,22 @@ Route::controller('routers','RoutersController',[
 			'getEdit'			=>		'router.edit.form',
 			'postEdit'			=>		'router.edit',
 			'postDelete'		=>		'router.delete',
+	]);
+
+
+Route::controller('subnet','SubnetController',[
+			'getIndex'			=>		'subnet.index',
+			'getAddSubnet'		=>		'subnet.add.form',
+			'postAddSubnet'		=>		'subnet.add',
+			'getEditSubnet'		=>		'subnet.edit.form',
+			'postEditSubnet'	=>		'subnet.edit',
+			'postDeleteSubnet'	=>		'subnet.delete',
+			'getAssignIP'		=>		'subnet.assignip.form',
+			'postAssignIP'		=>		'subnet.assignip',
+			'getAssignRoute'	=>		'subnet.assignroute.form',
+			'postAssignRoute'	=>		'subnet.assignroute',
+			'getDeleteIp'		=>		'subnet.delete.ip',
+			'getDeleteRoute'	=>		'subnet.delete.route',
 	]);
 
 Route::controller('templates','TemplatesController',[

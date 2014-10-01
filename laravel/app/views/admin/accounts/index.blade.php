@@ -25,7 +25,7 @@
                                 <th>Name</th>
                                 <th>Contact Number</th>
                                 <th>Created On</th>
-                                <th>Validity Expires</th>
+                                <th>Account Type</th>
                                 <th>Account Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -41,8 +41,12 @@
                                 <td>{{$a->contact}}</td>
                                 <td>{{date("d-M-Y", strtotime($a->created_at))}}</td>
                                 <td>
-                                    @if(isset($a->recharge))
-                                    {{date('d-M-y', strtotime($a->recharge->expiration))}}
+                                    @if($a->plan_type == FREE_PLAN)
+                                    FRiNTERNET
+                                    @elseif($a->plan_type == PREPAID_PLAN)
+                                    Prepaid
+                                    @elseif($a->plan_type == ADVANCEPAID_PLAN)
+                                    Advance Paid
                                     @endif
                                 </td>
                                 <td>{{($a->status) ? 'Active' : 'Deactive'}}</td>

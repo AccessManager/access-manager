@@ -146,6 +146,28 @@ Class ServicePlansController extends AdminBaseController {
 		return $limit;
 	}
 
+	public function getFreePlan()
+	{
+		$plan = FRINTERNET::find(1);
+		$policies = Policy::lists('name','id');
+		return View::make('admin.plans.free')
+					->with('policies', $policies)
+					->with('plan', $plan);
+	}
+
+	public function postFreePlan()
+	{
+		$input = Input::all();
+		$plan = FRINTERNET::firstOrNew(['id'=>1]);
+		$plan->fill($input);
+		if( $plan->save() ) {
+			$this->notifySuccess('Free Plan successfully updated.');
+		} else {
+			$this->notifyError('Failed to update Free Plan.');
+		}
+		return Redirect::back();
+	}
+
 	public function postDelete($id)
 	{
 		$this->flash( Plan::destroy($id) );

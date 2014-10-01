@@ -104,8 +104,6 @@ class PrepaidVouchers extends Migration {
 			$t->string('expiration',20);
 			$t->boolean('aq_invocked');
 			$t->integer('active_tpl')->unsigned()->nullable();
-			// $t->bigInteger('sess_time');
-			// $t->bigInteger('sess_data');
 		});
 	}
 

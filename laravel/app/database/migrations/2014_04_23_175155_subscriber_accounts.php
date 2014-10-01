@@ -20,6 +20,7 @@ class SubscriberAccounts extends Migration {
 			$t->string('uname');
 			$t->string('pword');
 			$t->string('clear_pword');
+			$t->tinyInteger('plan_type');
 			$t->string('fname')->nullable();
 			$t->string('lname')->nullable();
 			$t->string('contact')->nullable();

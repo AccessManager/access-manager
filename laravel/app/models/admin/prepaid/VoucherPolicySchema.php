@@ -40,4 +40,11 @@ Class VoucherPolicySchema extends BaseModel {
 	{
 		return $this->belongsTo('VoucherPolicySchemaTemplate','sa');
 	}
+
+	public function sunday()
+	{
+		return $this->belongsTo('VoucherPolicySchemaTemplate','su');
+	}
 }
+
+//end of file VoucherPolicySchema.php

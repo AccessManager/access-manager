@@ -19,6 +19,7 @@ class Settings extends Migration {
 			$t->increments('id');
 			$t->integer('idle_timeout');
 			$t->boolean('self_signup');
+			$t->boolean('allow_free_ppp');
 		});
 
 		Schema::create('paypal_settings', function(Blueprint $t)

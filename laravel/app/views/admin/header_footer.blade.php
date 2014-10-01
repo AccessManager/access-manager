@@ -15,7 +15,7 @@ if( $segment == 'subscribers' && Request::segment(3) == 'active') {
 if($segment == 'subscribers' && Request::segment(3) != 'active') {
     $subscribers = 'active';
 }
-if($segment == 'prepaid-vouchers') {
+if($segment == 'prepaid-vouchers' || $segment == 'refill-coupons') {
     $prepaid = 'active';
 }
 if($segment == 'service-plans' || $segment == 'bandwidth-policies' || $segment == 'policy-schemas') {
@@ -111,6 +111,10 @@ if( $segment == 'settings' ) {
                                 {{HTML::link(route('voucher.index'), 'Recharge Vouchers')}}
                                 </li>
                                 <li>
+                                    {{link_to_route('refill.index','Refill Coupons')}}
+                                </li>
+                                <li>{{link_to_route('refill.recharge.form','Refill Account')}}</li>
+                                <li>
                                     {{link_to_route('voucher.recharge.form','Recharge Account')}}
                                 </li>
                             </ul>
@@ -125,6 +129,9 @@ if( $segment == 'settings' ) {
                                 {{link_to_route('plan.index','Service Plans')}}
                                 </li>
                                 <li>
+                                    {{link_to_route('plan.free.form','FRiNTERNET')}}
+                                </li>
+                                <li>
                                     {{link_to_route('policies.index','Bandwidth Policies')}}
                                 </li>
                                 <li>
@@ -133,6 +140,7 @@ if( $segment == 'settings' ) {
                                 <li>
                                     {{link_to_route('schematemplate.index','Schema Templates')}}
                                 </li>
+
                             </ul>
                         </li>
                         <li class="dropdown {{$customize}}">
@@ -157,7 +165,9 @@ if( $segment == 'settings' ) {
                                 <li>
                                     {{link_to_route('router.index','Routers')}}
                                 </li>
-                                <li class="disabled"><a href="">IP subnets</a></li>
+                                <li>
+                                    {{link_to_route('subnet.index','IP Subnets')}}
+                                </li>
                             </ul>
                         </li>
                         <li class="dropdown {{$system}}">
@@ -256,7 +266,9 @@ if( $segment == 'settings' ) {
 @endif
 {{HTML::script('public/js/schema_template_show_hide.js')}}
 {{HTML::script('public/js/plan_show_hide.js')}}
+
 {{HTML::script('public/js/bootstrap-clockpicker.min.js')}}
+{{HTML::script('public/js/assign-ip.js')}}
 
 {{HTML::script('public/js/alertify.js')}}
 <!-- Show Notifications via alertify.js -->

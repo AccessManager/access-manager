@@ -12,8 +12,9 @@
 	"require": {
 		"php" : ">=5.4",
 		"laravel/framework": "4.2.*",
-		"access-manager/am-radius" : "*",
-		"edvinaskrucas/notification": "3.*"
+		"access-manager/am-radius" : "0.2.*",
+		"edvinaskrucas/notification": "3.*",
+		"s1lentium/iptools":"dev-master"
 	},
 	"autoload": {
 		"classmap": [

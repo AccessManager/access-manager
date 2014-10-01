@@ -8,10 +8,11 @@ Class AccountsController extends AdminBaseController {
 	{
 		$q = DB::table('radacct as a')
 				->select('u.uname','u.fname','u.lname','u.contact',
-						'r.expiration', 'a.acctstarttime','v.plan_name')
+						// 'r.expiration', 
+						'a.acctstarttime')
 				->join('user_accounts as u','u.uname','=','a.username')
-				->join('user_recharges as r','u.id','=','r.user_id')
-				->join('prepaid_vouchers as v', 'r.voucher_id','=','v.id')
+				// ->join('user_recharges as r','u.id','=','r.user_id')
+				// ->join('prepaid_vouchers as v', 'r.voucher_id','=','v.id')
 				->where('a.acctstoptime', NULL);
 
 		$alphabet = Input::get('alphabet', NULL);
@@ -54,7 +55,9 @@ Class AccountsController extends AdminBaseController {
 			$input['clear_pword'] = $input['pword'];
 			$input['pword'] = Hash::make($input['pword']);
 			
-			Subscriber::create($input);
+			$account = Subscriber::create($input);
+			if( $account->plan_type == FREE_PLAN )
+				Subscriber::updateFreePlan($account->id);
 
 			$this->notifySuccess("New Subscriber added successfully: <b>{$input['uname']}</b>");
 		}
@@ -95,12 +98,21 @@ Class AccountsController extends AdminBaseController {
 			$account = Subscriber::find($input['id']);
 			if( ! $account )		throw new Exception("No such user with id:{$input['id']}");
 			$account->fill($input);
-			if( ! $account->save() )	throw new Exception("Account creation failed.");
+			if( ! $account->save() )	throw new Exception("Failed to update account.");
+			
+			switch($account->plan_type) {
+				case FREE_PLAN :
+				Subscriber::updateFreePlan($account->id);
+				break;
+				case PREPAID_PLAN :
+				Subscriber::updatePrepaidPlan($account->id);
+				break;
+			}
 			$this->notifySuccess("Account successfully updated.");
 		}
 		catch(Exception $e) {
 			$this->notifyError( $e->getMessage() );
-			// return Redirect::route(self::HOME);
+			return Redirect::route(self::HOME);
 		}
 		return Redirect::route(self::HOME);
 	}
@@ -127,7 +139,7 @@ Class AccountsController extends AdminBaseController {
 		try{
 			$profile = Subscriber::findOrFail($id);
 			$rc_history = $profile->rechargeHistory()->take(5)->get();
-			$sess_history = $profile->sessionHistory()->take(5)->get();
+			$sess_history = $profile->sessionHistory()->paginate(10);
 
 			return View::make('admin.accounts.profile')
 						->with('profile',$profile)
@@ -139,9 +151,72 @@ Class AccountsController extends AdminBaseController {
 		}
 	}
 
+	public function getAssignPlan($user_id)
+	{
+		$profile = Subscriber::findOrFail($user_id);
+		$plans = Plan::lists('name','id');
+		return View::make("admin.accounts.assign-plan")
+					->with('profile', $profile)
+					->with('plans', $plans);
+	}
+
+	public function postAssignPlan()
+	{
+		$user_id = Input::get('user_id', 0);
+		$plan_id = Input::get('plan_id', 0);
+		APActivePlan::AssignPlan($user_id, $plan_id);
+		return Redirect::back();
+
+	}
+
+	public function getActiveServices($user_id)
+	{
+		$profile = Subscriber::findOrFail($user_id);
+		if( $profile->plan_type == PREPAID_PLAN ) {
+			$plan = DB::table('user_recharges as r')
+							->where('r.user_id', $user_id)
+							->select('r.time_limit','r.data_limit','recharged_on','r.expiration',
+								'plan_name','plan_type','l.limit_type')
+							->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
+							->leftJoin('voucher_limits as l','l.id','=','v.limit_id')
+							->first();
+		}
+		if( $profile->plan_type == FREE_PLAN ) {
+			$plan = Freebalance::where('user_id', $user_id)->first();
+		}
+		if( $profile->plan_type == ADVANCEPAID_PLAN ) {
+			$plan = APActivePlan::where('user_id',$user_id)
+							->select('plan_type','limit_type','time_balance as time_limit',
+								'data_balance as data_limit','plan_name')
+							->join('ap_limits as l','l.id','=','ap_active_plans.limit_id')
+							->first();
+		}
+		$framedIP = SubnetIP::where('user_id',$user_id)->first();
+		$framedRoute = UserRoute::where('user_id',$user_id)->first();
+		return View::make("admin.accounts.services")
+					->with('profile', $profile)
+					->with('plan', $plan)
+					->with('framedIP',$framedIP)
+					->with('framedRoute', $framedRoute);
+	}
+
 	public function postResetPassword()
 	{
-		pr(Input::all());
+		$pword = Input::get('npword');
+		$id = Input::get('id');
+
+		// pr(Input::all());
+		$affectedRows =	Subscriber::where('id', $id)
+					->update([
+							'pword'		=>	Hash::make($pword),
+						'clear_pword'	=>	$pword,
+						]);
+		if($affectedRows) {
+			$this->notifySuccess("Password Changed.");
+		} else {
+			$this->notifyError("Failed to change password.");
+		}
+		return Redirect::back();
 	}
 
 	public function postRefill()

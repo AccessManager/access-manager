@@ -70,11 +70,4 @@ require $framework.'/Illuminate/Foundation/start.php';
 |
 */
 
-function pr($data) {
-	echo "<pre>";
-	print_r($data);
-	echo "</pre>";
-	exit();
-}
-
 return $app;

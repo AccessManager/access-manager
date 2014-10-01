@@ -21,24 +21,35 @@
 </div> -->
 
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-  <li class="active"><a>User Profile</a></li>
   <li>
-    {{link_to_route('subscriber.services','Active Services',$profile->id)}}
-  </li>
+    {{link_to_route('subscriber.profile','User Profile', $profile->id)}}
+</li>
+  <li class="active"><a>Active Services</a></li>
 </ul>
 <div class="row">
 	<div class="col-lg-9">
 		<div class="panel panel-default">
 		  <div class="panel-body">
             <div class="row">
-                <div class="col-lg-12">
-                    <h2>{{{$profile->fname}}} {{{$profile->lname}}}
-                        <!-- <span class="pull-right"> -->
-                            ({{{$profile->uname}}})
-                        <!-- </span> -->
-                    </h2>
-                        
+                @if(count($plans))
+                {{Form::open(['route'=>'subscriber.assign','class'=>'form-inline','role'=>'form'])}}
+                {{Form::hidden('user_id', $profile->id)}}
+                <div class="col-lg-10 col-lg-offset-2">
+                    <div class="form-group col-lg-6 {{Form::error($errors, 'plan')}}">
+                      <label for="select" class="col-lg-5 control-label">Select Plan</label>
+                          <div class="col-lg-3">
+                            {{Form::select('plan_id', $plans, NULL, ['class'=>'form-control'])}}
+                            {{$errors->first('plan',"<span class='help-block'>:message</span>")}}
+                        </div>
+                    </div>
+                    <div class="fom-group col-lg-6">
+                        {{Form::submit('Assign Plan', ['class'=>'form-control btn-primary'])}}
+                    </div>
                 </div>
+                {{Form::close()}}
+                @else
+                <label for="" class='col-lg-6 col-lg-offset-4'>Please {{link_to_route('plan.add.form','create a service plan')}} first.</label>
+                @endif
             </div>
             <hr>
             <div class="row all" id='profile'>
@@ -95,26 +106,34 @@
                                 </h5>
                             </div>
                             <div class="col-lg-7">
+                                <h5>Active</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-1">
                                 <h5>
-                                    {{$profile->status ? 'Active' : 'Deactive'}}
+                                    <i class="fa fa-envelope"></i>
+                                </h5>
+                            </div>
+                            <div class="col-lg-11">
+                                <h5>
+                                    <a href="mailto:{{$profile->email}}">
+                                        {{$profile->email}}
+                                    </a>
                                 </h5>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-lg-1">
                                 <h5>
-                                    <b>Service Type:</b>
+                                    <i class="fa fa-phone"></i>
                                 </h5>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-11">
                                 <h5>
-                                    @if($profile->plan_type == FREE_PLAN)
-                                    FRiNTERNET
-                                    @elseif($profile->plan_type == PREPAID_PLAN)
-                                    Prepaid
-                                    @elseif($profile->plan_type == ADVANCEPAID_PLAN)
-                                    Advance Paid
-                                    @endif
+                                    <a href="tel:{{$profile->contact}}">
+                                     {{$profile->contact}}
+                                    </a>        
                                 </h5>
                             </div>
                         </div>
@@ -176,97 +195,5 @@
         </div>
 </div>
 
-<ul class="nav nav-tabs" style="margin-bottom: 15px;">
-  <li class="active"><a href="#session" data-toggle="tab">Recent Sessions</a></li>
-  <!-- <li><a href="#recharge" data-toggle="tab">Recent Recharges</a></li> -->
-</ul>
 
-<div id="myTabContent" class="tab-content">
-  <div class="tab-pane fade active in" id="session">
-    <table class="table table-striped table-responsive table-hover table-condensed">
-                        <thead>
-                            <tr>
-                                <!-- <th>#</th> -->
-                                <th>Start Time</th>
-                                <th>Stop Time</th>
-                                <th>Duration</th>
-                                <th>Download</th>
-                                <th>Upload</th>
-                                <th>Total Data Transfer</th>
-                                <th>Framed IP</th>
-                                <th>MAC Address</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @if(count($sess_history))
-                            <h1>Hello</h1>
-                            @foreach($sess_history as $session)
-                            <tr>
-                                <!-- <td>1</td> -->
-                                <td><a href="">{{$session->acctstartime}}</a></td>
-                                <td>{{$session->acctstoptime}}</td>
-                                <td>Duration</td>
-                                <td>{{$session->acctinputoctets}}</td>
-                                <td>{{$session->acctoutputoctets}}</td>
-                                <td>Total Data Transfer</td>
-                                <td>{{$session->framedipaddress}}</td>
-                                <td>{{$session->callingstationid}}</td>
-                            </tr>
-                            @endforeach
-                            @else
-                            <tr>
-                                <td colspan='8'>No Records Found.</td>
-                            </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                    <div class="row">
-                <div class="col-lg12 col-md-12 col-sm-12">
-                    {{$sess_history->links()}}
-                </div>
-            </div>
-            <hr>
-  </div>
-<!--   <div class="tab-pane fade" id="recharge">
-    <table class="table table-striped table-responsive table-hover table-condensed">
-        <thead>
-            <tr>
-                <th>Service Plan</th>
-                <th>Recharged On</th>
-                <th>Method</th>
-                <th>Plan Validity</th>
-                <th>Plan Type</th>
-                <th>Time Limit</th>
-                <th>Data Limit</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if(count($rc_history))
-            <?php $i = 1; ?>
-            @foreach($rc_history as $voucher)
-            <tr>
-                <td>{{$voucher->plan_name}}</td>
-                <td>{{$voucher->updated_at}}</td>
-                <td>{{$voucher->method}}</td>
-                <td>{{$voucher->validity}} {{$voucher->validity_unit}}</td>
-                <td>{{$voucher->plan_type == 1 ? 'Limited' : 'Unlimited';}}</td>
-                @if(isset($voucher->limits))
-                <td>{{$voucher->limits->time_limit}} {{$voucher->limits->time_unit}}</td>
-                <td>{{$voucher->limits->data_limit}} {{$voucher->limits->data_unit}}</td>
-                @else
-                <td>N/A</td>
-                <td>N/A</td>
-                @endif
-            </tr>
-            <?php $i++; ?>
-            @endforeach
-            @else
-            <tr> <td colspan='8'></td></tr>
-            @endif
-        </tbody>
-    </table>
-    <a href="" class="btn btn-primary pull-right">View Full History</a>
-  </div>
- -->
 @stop
