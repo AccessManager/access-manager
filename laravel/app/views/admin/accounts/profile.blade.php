@@ -34,7 +34,7 @@
                 <div class="col-lg-12">
                     <h2>{{{$profile->fname}}} {{{$profile->lname}}}
                         <!-- <span class="pull-right"> -->
-                            ({{{$profile->uname}}})
+                            <!-- ({{{$profile->uname}}}) -->
                         <!-- </span> -->
                     </h2>
                         

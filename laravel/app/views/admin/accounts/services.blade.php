@@ -37,13 +37,13 @@
                                 @if( $profile->plan_type == ADVANCEPAID_PLAN )
                                 {{link_to_route('subscriber.assign.form','Assign Service Plan', $profile->id)}}
                                 @elseif( $profile->plan_type == PREPAID_PLAN )
-                                {{link_to_route('voucher.recharge.form','Recharge Now')}}
+                                {{link_to_route('voucher.recharge.form','Recharge Account',$profile->id)}}
                                 @endif
                             </p>
                         @else
                             <p class='pull-right'>
                                 @if( $profile->plan_type == PREPAID_PLAN )
-                                {{link_to_route('voucher.recharge.form','Recharge Account')}}
+                                {{link_to_route('voucher.recharge.form','Recharge Account', $profile->id)}}
                                 @elseif( $profile->plan_type == ADVANCEPAID_PLAN )
                                 {{link_to_route('subscriber.assign.form','Change Service Plan',$profile->id)}}
                                 @endif

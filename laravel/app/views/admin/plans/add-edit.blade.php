@@ -1,8 +1,6 @@
 @extends('admin.header_footer')
 @section('admin_container')
 <?php
-// echo $plan->limit->limit_type; exit;
-// pr($plan->limit);
 $limit_type = 'hidden';
 $time_limit = 'hidden';
 $data_limit = 'hidden';
@@ -10,13 +8,10 @@ $aq_access = 'hidden';
 $aq_policy = 'hidden';
 $single_policy = NULL;
 $policy_schema = 'hidden';
-// $something = 'policy_id';
-// $else = 'schema_id';
 if( isset($plan) ) {
   if( $plan->plan_type == 1 ) {
     $limit_type = NULL;
     $aq_access = NULL;
-    // if(isset($plan->limit) ) {
       if( $plan->limit_type == 0 || $plan->limit_type == 2 ) {
         $time_limit = NULL;
       }
@@ -26,14 +21,12 @@ if( isset($plan) ) {
       if( $plan->aq_access ) {
         $aq_policy = NULL;
       }
-    // }
   }
   if( $plan->policy_type == 'PolicySchema' ) {
     $single_policy = 'hidden';
     $policy_schema = NULL;
   }
 }
-
 ?>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -43,12 +36,11 @@ if( isset($plan) ) {
           @else
           Add Service Plan
           @endif
-            {{link_to_route('plan.index', 'Back to Plans Listing', NULL, ['class'=>'btn btn-default navbar-right'])}}
+            {{link_to_route('plan.index', ' All Plans', NULL, ['class'=>'btn btn-default navbar-right'])}}
         </h2>
     </div>
     
 </div>
-
             <hr />
 <div class="row">
 	<div class="col-lg-7 col-lg-offset-2">

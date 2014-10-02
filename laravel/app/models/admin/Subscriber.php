@@ -31,7 +31,8 @@ Class Subscriber extends BaseModel {
 
 		$free_plan = FRINTERNET::select('plan_type','limit_type','time_limit','time_unit'
 								,'data_limit','data_unit','validity','validity_unit','policy_id',
-								'limit_type','aq_access','aq_policy','sim_sessions','interim_updates')
+								'limit_type','aq_access','aq_policy','sim_sessions','interim_updates',
+								'reset_every','reset_unit')
 								->first();
 		$new_balance = [
 			'last_reset_on' => date('Y-m-d H:i:s'),
@@ -46,6 +47,8 @@ Class Subscriber extends BaseModel {
 			'aq_access'		=>	$free_plan->aq_access,
 			'sim_sessions'	=>	$free_plan->sim_sessions,
 			'interim_updates'	=>	$free_plan->interim_updates,
+			'reset_every'	=>	$free_plan->reset_every,
+			'reset_unit'	=>	$free_plan->reset_unit,
 			'aq_invocked'	=>	0,
 			'time_balance'	=>	NULL,
 			'data_balance'	=>	NULL,
