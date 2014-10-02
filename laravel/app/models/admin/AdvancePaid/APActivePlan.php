@@ -49,7 +49,7 @@ class APActivePlan extends BaseModel {
 					$limit = $plan->limit;
 					if( $limit->limit_type == TIME_LIMIT || $limit->limit_type == BOTH_LIMITS )
 						$newPlan['time_balance'] = $limit->time_limit * constant($limit->time_unit);
-					if( $limit->limit_type == BOTH_LIMITS || $limit->limit_type == BOTH_LIMITS )
+					if( $limit->limit_type == DATA_LIMIT || $limit->limit_type == BOTH_LIMITS )
 						$newPlan['data_balance'] = $limit->data_limit * constant($limit->data_unit);
 					
 					if( $limit->aq_access == ALLOWED ) {

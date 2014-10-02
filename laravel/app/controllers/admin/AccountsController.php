@@ -54,10 +54,11 @@ Class AccountsController extends AdminBaseController {
 
 			$input['clear_pword'] = $input['pword'];
 			$input['pword'] = Hash::make($input['pword']);
+			$input['plan_type'] = PREPAID_PLAN;
 			
 			$account = Subscriber::create($input);
-			if( $account->plan_type == FREE_PLAN )
-				Subscriber::updateFreePlan($account->id);
+			// if( $account->plan_type == FREE_PLAN )
+			// 	Subscriber::updateFreePlan($account->id);
 
 			$this->notifySuccess("New Subscriber added successfully: <b>{$input['uname']}</b>");
 		}
@@ -100,14 +101,14 @@ Class AccountsController extends AdminBaseController {
 			$account->fill($input);
 			if( ! $account->save() )	throw new Exception("Failed to update account.");
 			
-			switch($account->plan_type) {
-				case FREE_PLAN :
-				Subscriber::updateFreePlan($account->id);
-				break;
-				case PREPAID_PLAN :
-				Subscriber::updatePrepaidPlan($account->id);
-				break;
-			}
+			// switch($account->plan_type) {
+			// 	case FREE_PLAN :
+			// 	Subscriber::updateFreePlan($account->id);
+			// 	break;
+			// 	case PREPAID_PLAN :
+			// 	Subscriber::updatePrepaidPlan($account->id);
+			// 	break;
+			// }
 			$this->notifySuccess("Account successfully updated.");
 		}
 		catch(Exception $e) {
@@ -119,6 +120,9 @@ Class AccountsController extends AdminBaseController {
 
 	public function postDelete($id)
 	{
+		$this->notifyError("Operation Not Permitted.");
+		return Redirect::back();
+		//////////////////////////////////////////////////////
 		try{
 			DB::transaction(function() use($id) {
 				if( ! Subscriber::destroy($id) ||
@@ -162,35 +166,24 @@ Class AccountsController extends AdminBaseController {
 
 	public function postAssignPlan()
 	{
-		$user_id = Input::get('user_id', 0);
-		$plan_id = Input::get('plan_id', 0);
-		APActivePlan::AssignPlan($user_id, $plan_id);
-		return Redirect::back();
+		try{
+			$user_id = Input::get('user_id', 0);
+			$plan_id = Input::get('plan_id', 0);
+			APActivePlan::AssignPlan($user_id, $plan_id);
+			$this->notifySuccess("Plan Assigned.");
+		}
+		catch(Exception $e) {
+			$this->notifyError($e->getMessage());
+			return Redirect::route("subscriber.services",$user_id);
+		}
+		return Redirect::route("subscriber.services",$user_id);
 
 	}
 
 	public function getActiveServices($user_id)
 	{
 		$profile = Subscriber::findOrFail($user_id);
-		if( $profile->plan_type == PREPAID_PLAN ) {
-			$plan = DB::table('user_recharges as r')
-							->where('r.user_id', $user_id)
-							->select('r.time_limit','r.data_limit','recharged_on','r.expiration',
-								'plan_name','plan_type','l.limit_type')
-							->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
-							->leftJoin('voucher_limits as l','l.id','=','v.limit_id')
-							->first();
-		}
-		if( $profile->plan_type == FREE_PLAN ) {
-			$plan = Freebalance::where('user_id', $user_id)->first();
-		}
-		if( $profile->plan_type == ADVANCEPAID_PLAN ) {
-			$plan = APActivePlan::where('user_id',$user_id)
-							->select('plan_type','limit_type','time_balance as time_limit',
-								'data_balance as data_limit','plan_name')
-							->join('ap_limits as l','l.id','=','ap_active_plans.limit_id')
-							->first();
-		}
+		$plan = Subscriber::getActiveServices($profile);
 		$framedIP = SubnetIP::where('user_id',$user_id)->first();
 		$framedRoute = UserRoute::where('user_id',$user_id)->first();
 		return View::make("admin.accounts.services")
@@ -205,7 +198,6 @@ Class AccountsController extends AdminBaseController {
 		$pword = Input::get('npword');
 		$id = Input::get('id');
 
-		// pr(Input::all());
 		$affectedRows =	Subscriber::where('id', $id)
 					->update([
 							'pword'		=>	Hash::make($pword),
@@ -217,6 +209,41 @@ Class AccountsController extends AdminBaseController {
 			$this->notifyError("Failed to change password.");
 		}
 		return Redirect::back();
+	}
+
+	public function getChangeServiceType($user_id)
+	{
+		$profile = Subscriber::findOrFail($user_id);
+		return View::make("admin.accounts.change-service-type")
+					->with('profile', $profile);
+	}
+
+	public function postChangeServiceType()
+	{
+		try {
+			$user_id = Input::get('user_id');
+			DB::transaction(function()use($user_id){
+				$user = Subscriber::findOrFail($user_id);
+				$user->plan_type = Input::get('plan_type');
+				if( ! $user->save() )	throw new Exception('Failed to change service type.');
+				if( $user->plan_type == ADVANCEPAID_PLAN ) {
+					$billing = BillingCycle::firstOrNew(['user_id'=>$user_id]);
+					$billing->fill(Input::all());
+					if( ! $billing->save() )	throw new Exception("Failed to save billing cycle details.");
+				}
+				if( $user->plan_type == FREE_PLAN ) {
+					Subscriber::updateFreePlan($user_id);
+				}
+			});
+
+			$this->notifySuccess("Service Type Updated.");
+		}
+		catch(Exception $e)
+		{
+			$this->notifyError($e->getMessage());
+			return Redirect::route('subscriber.profile', $user_id);
+		}
+		return Redirect::route('subscriber.profile', $user_id);
 	}
 
 	public function postRefill()

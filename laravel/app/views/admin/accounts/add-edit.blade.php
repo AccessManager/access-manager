@@ -10,7 +10,7 @@
           @else
           Add Account
           @endif
-            {{link_to_route('subscriber.index', 'Back to Accounts Listing', NULL, ['class'=>'btn btn-default navbar-right'])}}
+            {{link_to_route('subscriber.index', 'All Accounts', NULL, ['class'=>'btn btn-default navbar-right'])}}
           </h2>
         
     </div>
@@ -82,13 +82,13 @@
         {{$errors->first('address',"<span class='help-block'>:message</span>")}}
       </div>
   </div>
-  <div class="form-group {{Form::error($errors, 'status')}}">
+  <!-- <div class="form-group {{Form::error($errors, 'status')}}">
       <label for="select" class="col-lg-3 control-label">Account Type</label>
       <div class="col-lg-8">
         {{Form::select('plan_type', [FREE_PLAN => 'FRiNTERNET', PREPAID_PLAN => 'Prepaid',ADVANCEPAID_PLAN => 'AdvancePaid'], NULL, ['class'=>'form-control'])}}
         {{$errors->first('plan_type',"<span class='help-block'>:message</span>")}}
     </div>
-</div>
+</div> -->
   <div class="form-group {{Form::error($errors, 'status')}}">
       <label for="select" class="col-lg-3 control-label">Account Status</label>
       <div class="col-lg-8">

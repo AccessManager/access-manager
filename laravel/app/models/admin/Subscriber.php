@@ -60,22 +60,50 @@ Class Subscriber extends BaseModel {
 		}
 		$free_balance->fill($new_balance);
 		$free_balance->save();
-		$recharge = Recharge::where('user_id', $user_id)
-								->first();
-		if( ! is_null($recharge) )
-		$recharge->delete();
-	}
-
-	public static function updatePrepaidPlan($user_id)
-	{
-
-		$recharge = Recharge::where('user_id', $user_id)
-									->first();
+		// $recharge = Recharge::where('user_id', $user_id)
+		// 						->first();
 		// if( ! is_null($recharge) )
 		// $recharge->delete();
-		$free_balance = Freebalance::where(['user_id'=>$user_id])->first();
-		if( ! is_null($free_balance) )
-			$free_balance->delete();
+	}
+
+	// public static function updatePrepaidPlan($user_id)
+	// {
+
+	// 	$recharge = Recharge::where('user_id', $user_id)
+	// 								->first();
+	// 	// if( ! is_null($recharge) )
+	// 	// $recharge->delete();
+	// 	$free_balance = Freebalance::where(['user_id'=>$user_id])->first();
+	// 	if( ! is_null($free_balance) )
+	// 		$free_balance->delete();
+	// }
+
+	public static function getActiveServices(Subscriber $profile)
+	{
+		switch($profile->plan_type) {
+			case PREPAID_PLAN:
+			return DB::table('user_recharges as r')
+						->where('r.user_id', $profile->id)
+						->select('r.time_limit','r.data_limit','recharged_on','r.expiration',
+							'plan_name','plan_type','l.limit_type')
+						->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
+						->leftJoin('voucher_limits as l','l.id','=','v.limit_id')
+						->first();
+			break;
+			case FREE_PLAN :
+			return Freebalance::where('user_id', $profile->id)->first();
+			break;
+			case ADVANCEPAID_PLAN :
+			return APActivePlan::where('user_id',$profile->id)
+							->select('plan_type','limit_type','time_balance as time_limit',
+								'data_balance as data_limit','plan_name')
+							->join('ap_limits as l','l.id','=','ap_active_plans.limit_id')
+							->first();
+			break;
+			default:
+			return NULL;
+			break;
+		}
 	}
 
 	// public static function addAccount($input)

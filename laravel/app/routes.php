@@ -13,7 +13,9 @@
 
 
 Route::get('json/get-ip-list/{id}',function($subnet_id){
-	$list = SubnetIP::where('subnet_id',$subnet_id)->lists('ip','id');
+	$list = SubnetIP::where('subnet_id',$subnet_id)
+					->whereNull('user_id')
+					->lists('ip','id');
 	foreach($list as $id => $ip) {
 		$ips[$id] = long2ip($ip);
 	}
@@ -147,6 +149,8 @@ Route::controller('subscribers', 'AccountsController',[
 			'postAssignIP'		=>		'subscriber.ip',
 			'getAssignRoute'	=>		'subscriber.route.form',
 			'postAssignRoute'	=>		'subscriber.route',
+			'getChangeServiceType'	=>	'subscriber.servicetype.form',
+			'postChangeServiceType'	=>	'subscriber.servicetype',
 	]);
 
 Route::controller('prepaid-vouchers','VouchersController',[

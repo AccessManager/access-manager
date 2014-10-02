@@ -43,6 +43,7 @@ if( $segment == 'settings' ) {
         {{HTML::style('public/css/alertify.core.css')}}
         {{HTML::style('public/css/alertify-bootstrap3.css')}}
         {{HTML::style('public/css/custom.css')}}
+        {{HTML::style('public/css/bootstrap-datetimepicker.min.css')}}
     </head>
     <body>
         <header>
@@ -269,6 +270,8 @@ if( $segment == 'settings' ) {
 
 {{HTML::script('public/js/bootstrap-clockpicker.min.js')}}
 {{HTML::script('public/js/assign-ip.js')}}
+{{HTML::script('public/js/moment.js')}}
+{{HTML::script('public/js/bootstrap-datetimepicker.min.js')}}
 
 {{HTML::script('public/js/alertify.js')}}
 <!-- Show Notifications via alertify.js -->
@@ -319,6 +322,14 @@ $(function(){
       }
     })
   })
+</script>
+<script tyle='text/javascript'>
+    $(function(){
+        $('#datepicker').datetimepicker({pickTime:false});
+        $('#datepicker').on('dp.change',function(e){
+            $('#datepicker').data("DateTimePicker").setMinDate(e.date);
+        });
+    });
 </script>
 </body>
 </html>

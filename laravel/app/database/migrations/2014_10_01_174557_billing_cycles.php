@@ -21,6 +21,7 @@ class BillingCycles extends Migration {
 			$t->enum('billing_unit',['Months','Years']);
 			$t->timestamp('last_billied_on')->nullable();
 			$t->integer('bill_date')->unsigned();
+			$t->timestamp('expiration');
 		});
 	}
 

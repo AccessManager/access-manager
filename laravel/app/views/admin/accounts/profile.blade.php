@@ -106,7 +106,7 @@
                                     <b>Service Type:</b>
                                 </h5>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-5">
                                 <h5>
                                     @if($profile->plan_type == FREE_PLAN)
                                     FRiNTERNET
@@ -115,6 +115,11 @@
                                     @elseif($profile->plan_type == ADVANCEPAID_PLAN)
                                     Advance Paid
                                     @endif
+                                </h5>
+                            </div>
+                            <div class="col-lg-2">
+                                <h5>
+                                    {{link_to_route("subscriber.servicetype.form",'Change',$profile->id)}}
                                 </h5>
                             </div>
                         </div>

@@ -18,40 +18,41 @@
             <div class="row">
 
                 <div class="col-lg-12">
-                    <h2>
-                        @if( isset($plan))
-                            @if( $profile->plan_type == FREE_PLAN )
-                                FRiNTERNET
+                    <div class="col-lg-6">
+                        <h2>
+                            @if( isset($plan))
+                                @if( $profile->plan_type == FREE_PLAN )
+                                    FRiNTERNET
+                                @else
+                                {{$plan->plan_name}}
+                                @endif
                             @else
-                            {{$plan->plan_name}}
+                            No Service
                             @endif
+                        </h2>
+                    </div>
+                    <div class="col-lg-6">
+                        @if( is_null($plan) )
+                            <p class="pull-right">
+                                @if( $profile->plan_type == ADVANCEPAID_PLAN )
+                                {{link_to_route('subscriber.assign.form','Assign Service Plan', $profile->id)}}
+                                @elseif( $profile->plan_type == PREPAID_PLAN )
+                                {{link_to_route('voucher.recharge.form','Recharge Now')}}
+                                @endif
+                            </p>
                         @else
-                        No Service
+                            <p class='pull-right'>
+                                @if( $profile->plan_type == PREPAID_PLAN )
+                                {{link_to_route('voucher.recharge.form','Recharge Account')}}
+                                @elseif( $profile->plan_type == ADVANCEPAID_PLAN )
+                                {{link_to_route('subscriber.assign.form','Change Service Plan',$profile->id)}}
+                                @endif
+                            </p>
                         @endif
-                    </h2>
-
-                    @if( is_null($plan) )
-
-                        <p class="pull-right">
-                            @if( $profile->plan_type == ADVANCEPAID_PLAN )
-                            {{link_to_route('subscriber.assign.form','Assign Service Plan', $profile->id)}}
-                            @elseif( $profile->plan_type == PREPAID_PLAN )
-                            {{link_to_route('voucher.recharge.form','Recharge Now')}}
-                            @endif
-                        </p>
-                    @else
-                        <p class='pull-right'>
-                            @if( $profile->plan_type == PREPAID_PLAN )
-                            {{link_to_route('voucher.recharge.form','Recharge Account')}}
-                            @elseif( $profile->plan_type == ADVANCEPAID_PLAN )
-                            {{link_to_route('subscriber.assign.form','Change Service Plan',$profile->id)}}
-                            @endif
-                        </p>
-                    @endif
-                        
+                    </div>
                 </div>
             </div>
-            @if(isset($plan))
+            @if( ! is_null($plan))
             <hr>
             <div class="row all" id='profile'>
                 <div class="col-lg-6">
@@ -106,7 +107,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <h5>
-                                    {{$plan->data_limit}}
+                                    {{formatBytes($plan->data_limit)}}
                                 </h5>
                             </div>
                         </div>
@@ -176,13 +177,12 @@
                 </div>
             </div> <!-- ends profile row inside panel body -->
 @endif
-
             <div class="row all hidden" id='refill'>
                 <div class="col-lg-12">
                     <h1>Refill (Manually)</h1>
                 </div>
             </div> <!-- ends refill row inside panel body -->
-
+            
 		  </div> <!-- ends panel body -->
 		</div> <!-- ends panel-default -->
 	</div>
@@ -191,12 +191,13 @@
         		<li class="profile-nav active" target='profile'><a href='#'>
                     <i class="fa fa-angle-double-left"></i>
                     Active Services</a></li>
-			  <li class="profile-nav" target='reset-password'><a href='#'>
+                    @if( ( $profile->plan_type == FREE_PLAN || $profile->plan_type == PREPAID_PLAN ) && ! is_null($plan) && $plan->plan_type == LIMITED )
+			  <li class="profile-nav" target='reset-password'>
+                <a href='#'>
                 <i class="fa fa-angle-double-left"></i>
-                Refill Manually</a></li>
-			  <!-- <li class='profile-nav' target='refill'><a href='#'>
-                <i class="fa fa-angle-double-left"></i>
-                Refill (Manually)</a></li> -->
+                Refill Manually</a>
+            </li>
+                @endif
 			</ul>
         </div>
 </div>
