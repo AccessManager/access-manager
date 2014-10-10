@@ -85,5 +85,13 @@ require app_path().'/constants.php';
  * Register not found function to handle 404.
  */
 App::missing(function(){
-	return Response::view('admin.404', [], 404);
+	Cache::flush();
+	$config = Theme::first();
+	$themes = Config::get('themes');
+
+	$admin_theme = $themes[$config->admin_theme];
+	View::share('admin_theme', $admin_theme);
+	return Response::view('admin.404', [], 404)
+						// ->with('admin_theme', $admin_theme)
+						;
 });

@@ -59,7 +59,7 @@ if( $segment == 'settings' ) {
                 </div>
                 
                 <div class="navbar-collapse collapse navbar-responsive-collapse">
-                    
+                    @if( ! is_null(Auth::user()))
                         <ul class="nav navbar-nav  navbar-right">
                             <li>
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
@@ -85,6 +85,7 @@ if( $segment == 'settings' ) {
                                 </ul>
                             </li>
                         </ul>
+                        @endif
                 </div>
             </nav>
 
