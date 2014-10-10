@@ -151,6 +151,7 @@ Route::controller('subscribers', 'AccountsController',[
 			'postAssignRoute'	=>		'subscriber.route',
 			'getChangeServiceType'	=>	'subscriber.servicetype.form',
 			'postChangeServiceType'	=>	'subscriber.servicetype',
+			'postSearch'		=>		'subscriber.search'
 	]);
 
 Route::controller('prepaid-vouchers','VouchersController',[
@@ -207,6 +208,7 @@ Route::controller('subnet','SubnetController',[
 			'postAssignRoute'	=>		'subnet.assignroute',
 			'getDeleteIp'		=>		'subnet.delete.ip',
 			'getDeleteRoute'	=>		'subnet.delete.route',
+			'getUsedIPs'		=>		'subnet.usage'
 	]);
 
 Route::controller('templates','TemplatesController',[

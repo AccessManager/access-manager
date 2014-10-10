@@ -100,11 +100,11 @@ Class Subscriber extends BaseModel {
 			return APActivePlan::where('user_id',$profile->id)
 							->select('plan_type','limit_type','time_balance as time_limit',
 								'data_balance as data_limit','plan_name')
-							->join('ap_limits as l','l.id','=','ap_active_plans.limit_id')
+							->leftJoin('ap_limits as l','l.id','=','ap_active_plans.limit_id')
 							->first();
 			break;
 			default:
-			return NULL;
+			throw new Exception("Failed to identify service type: {$profile->plan_type}");
 			break;
 		}
 	}

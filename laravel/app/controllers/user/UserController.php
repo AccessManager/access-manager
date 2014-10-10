@@ -54,7 +54,33 @@ Class UserController extends UserBaseController {
 
 	public function postChangePassword()
 	{
+		// $input = Input::all();
+		// pr($input);
+		$user_id = Input::get('user_id', 0);
+		$current = Input::get('current', NULL);
 
+		$user = Subscriber::findOrFail($user_id);
+		if( $user->clear_pword != $current ) {
+			$this->notifyError("Incorrect current password.");
+			return Redirect::back();
+		}
+
+		$password = Input::get('password', NULL);
+		$confirm = Input::get('confirm_password', NULL);
+		if( $password != $confirm ) {
+			$this->notifyError("New password & confirm password do not match.");
+			return Redirect::back();
+		}
+
+		$user->clear_pword = $password;
+		$user->pword = Hash::make($password);
+
+		if($user->save()) {
+			$this->notifySuccess("Password Updated.");
+		} else {
+			$this->notifyError("Password Updation Failed.");
+		}
+		return Redirect::back();
 	}
 
 }

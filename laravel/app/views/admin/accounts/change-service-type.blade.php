@@ -72,7 +72,7 @@
                   <div class="form-group">
                         <label for="" class="col-lg-4 control-label">Contract Expires</label>
                         <div class="col-lg-8">
-                            {{Form::text('expiration', NULL, ['class'=>'form-control','placeholder'=>'e.g. September 30, 2015','id'=>'datepicker','data-date-format'=>"DD/MM/YYYY"])}}
+                            {{Form::text('expiration', NULL, ['class'=>'form-control','placeholder'=>'e.g. September 30, 2015','id'=>'datepicker','data-date-format'=>"YYYY-MM-DD"])}}
                         </div>
                     </div>
                     <div class="form-group">

@@ -30,7 +30,7 @@
 @endif
 
 <fieldset>
-  @if( ! isset($account) )
+  
   <div class="form-group {{Form::error($errors, 'uname')}}">
       <label for="inputEmail" class="col-lg-3 control-label">Username</label>
       <div class="col-lg-8  ">
@@ -38,6 +38,7 @@
           {{$errors->first('uname',"<span class='help-block'>:message</span>")}}
       </div>
   </div>
+  @if( ! isset($account) )
   <div class="form-group  {{Form::error($errors, 'pword')}}">
       <label for="inputEmail" class="col-lg-3 control-label">Password</label>
       <div class="col-lg-8">

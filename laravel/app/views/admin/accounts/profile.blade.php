@@ -205,16 +205,23 @@
                         <tbody>
 
                             @if(count($sess_history))
-                            <h1>Hello</h1>
                             @foreach($sess_history as $session)
                             <tr>
                                 <!-- <td>1</td> -->
-                                <td><a href="">{{$session->acctstartime}}</a></td>
-                                <td>{{$session->acctstoptime}}</td>
-                                <td>Duration</td>
-                                <td>{{$session->acctinputoctets}}</td>
-                                <td>{{$session->acctoutputoctets}}</td>
-                                <td>Total Data Transfer</td>
+                                <td>
+                                    {{date("d M Y - H:i", strtotime($session->acctstarttime))}}
+                                </td>
+                                <td>
+                                    @if( ! is_null($session->acctstoptime) )
+                                    {{date("d M Y - H:i", strtotime($session->acctstoptime))}}
+                                    @else
+                                    -
+                                    @endif
+                                </td>
+                                <td>{{$session->acctsessiontime}}</td>
+                                <td>{{formatBytes($session->acctinputoctets)}}</td>
+                                <td>{{formatBytes($session->acctoutputoctets)}}</td>
+                                <td>{{formatBytes($session->acctinputoctets + $session->acctoutputoctets)}}</td>
                                 <td>{{$session->framedipaddress}}</td>
                                 <td>{{$session->callingstationid}}</td>
                             </tr>

@@ -15,14 +15,14 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                     <ul class="nav nav-pills">
                         <li class="{{$all_acct_class}}"><a href="{{route('subscriber.active')}}">All Accounts</a></li>
 
-                        @for($i=97; $i<=122; $i++)
+                        @foreach(range('a','z') as $a)
                         <?php 
-                            $class = Input::get('alphabet', NULL) == chr($i) ? 'active' : NULL ;
+                            $class = Input::get('alphabet', NULL) == $a ? 'active' : NULL ;
                         ?>
                             <li class ="{{$class}}">
-                                <a href="{{route('subscriber.active') . '?' . http_build_query(array_merge(Input::except('alphabet'),['alphabet'=>chr($i)]))}}">{{chr($i)}}</a>
+                                <a href="{{route('subscriber.active') . '?' . http_build_query(array_merge(Input::except('alphabet'),['alphabet'=>$a]))}}">{{$a}}</a>
                             </li>
-                        @endfor
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -48,12 +48,14 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                             @foreach($active as $account)
                             <tr>
                                 <td>{{$i}}</td>
-                                <td><a href="">{{$account->uname}}</a></td>
+                                <td>
+                                    {{link_to_route('subscriber.profile',$account->uname,$account->id)}}
+                                </td>
                                 <td>{{$account->fname}} {{$account->lname}}</td>
                                 <td>{{$account->contact}}</td>
-                                <td>{{$account->plan_name}}</td>
+                                <td>Plan Name</td>
                                 <td>{{$account->acctstarttime}}</td>
-                                <td>{{$account->expiration}}</td>
+                                <td>Expiration</td>
                                 <td><button type="button" class="btn btn-danger btn-xs">
                                     <i class="fa fa-unlink"></i> disconnect</button></td>
                             </tr>

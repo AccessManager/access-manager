@@ -117,6 +117,19 @@ class SubnetController extends AdminBaseController {
 		return Redirect::back();
 	}
 
+	public function getUsedIPs($subnet_id)
+	{
+		$ips = DB::table("ip_subnets as s")
+					->join("subnet_ips as i",'s.id','=','i.subnet_id')
+					->leftJoin('user_accounts as u','u.id','=','i.user_id')
+					->where('s.id',$subnet_id)
+					->select("u.uname",'i.ip')
+					->paginate(100);
+
+		return View::make('admin.subnet.subnet-usage')
+					->with('ips',$ips);
+	}
+
 
 }
 //end of file SubnetController.php

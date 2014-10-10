@@ -17,23 +17,18 @@
                             <tr>
                                 <th>#</th>
                                 <th>Subnet</th>
-                                <th>Actions</th>
+                                <th>Account</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if(count($subnets))
-                            <?php $i = $subnets->getFrom();?>
-                            @foreach($subnets as $subnet)
+                            @if(count($ips))
+                            <?php $i = $ips->getFrom();?>
+                            @foreach($ips as $ip)
                             <tr>
                                 <td>{{$i}}</td>
+                                <td>{{long2ip($ip->ip)}}</td>
                                 <td>
-                                    {{link_to_route('subnet.usage',$subnet->subnet, $subnet->id)}}
-                                </td>
-                                <td>
-                                    {{Form::actions(
-                                        route('subnet.edit.form',$subnet->id),
-                                        route('subnet.delete',$subnet->id)
-                                        )}}
+                                    {{$ip->uname}}
                                 </td>
                         </tr>
                         <?php  $i++;  ?>
@@ -52,7 +47,7 @@
             </div>
             <div class="row">
                 <div class="col-lg12 col-md-12 col-sm-12">
-                    {{$subnets->links()}}
+                    {{$ips->links()}}
                 </div>
             </div>
 

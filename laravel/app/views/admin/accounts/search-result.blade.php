@@ -7,30 +7,15 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <h2>
                         <i class="fa fa-users"></i>
-                        Subscribers
-                        <a href="{{route('subscriber.add.form')}}" class="btn btn-primary pull-right"><i class="fa fa-user"></i> New Subscriber</a>
+                        Search Results : [{{Input::get('keyword', NULL)}}]
+                        <!-- <a href="{{route('subscriber.add.form')}}" class="btn btn-primary pull-right"><i class="fa fa-user"></i> New Subscriber</a> -->
                     </h2>
                     
                     
                 </div>
             </div>
             <!-- <div class="container"> -->
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <ul class="nav nav-pills">
-                        <li class="{{$all_acct_class}}"><a href="{{route('subscriber.index')}}">All Accounts</a></li>
-
-                        @foreach(range('a','z') as $a)
-                        <?php 
-                            $class = Input::get('alphabet', NULL) == $a ? 'active' : NULL ;
-                        ?>
-                            <li class ="{{$class}}">
-                                <a href="{{route('subscriber.index') . '?' . http_build_query(array_merge(Input::except('alphabet'),['alphabet'=>$a]))}}">{{$a}}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
+            
             <hr />
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -45,7 +30,7 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                                 <th>Created On</th>
                                 <th>Account Type</th>
                                 <th>Account Status</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -68,13 +53,13 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                                     @endif
                                 </td>
                                 <td>{{($a->status) ? 'Active' : 'Deactive'}}</td>
-                                <td>
+                                <!-- <td>
                                     {{Form::actions(
                                         route('subscriber.edit',$a->id),
                                         route('subscriber.delete',$a->id)
                                         )}}
                                     
-                                </td>
+                                </td> -->
                         </tr>
                         <?php $i++; ?>
                         @endforeach

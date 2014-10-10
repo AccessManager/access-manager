@@ -7,10 +7,11 @@ Class AccountsController extends AdminBaseController {
 	public function getActive()
 	{
 		$q = DB::table('radacct as a')
-				->select('u.uname','u.fname','u.lname','u.contact',
+				->select('u.id','u.uname','u.fname','u.lname','u.contact',
 						// 'r.expiration', 
 						'a.acctstarttime')
 				->join('user_accounts as u','u.uname','=','a.username')
+				->orderby('u.uname')
 				// ->join('user_recharges as r','u.id','=','r.user_id')
 				// ->join('prepaid_vouchers as v', 'r.voucher_id','=','v.id')
 				->where('a.acctstoptime', NULL);
@@ -25,11 +26,26 @@ Class AccountsController extends AdminBaseController {
 
 	public function getIndex()
 	{
-		$accounts = Subscriber::with('Recharge')
-								->where('is_admin',0)->paginate(10);
-								
+		$q = Subscriber::with('Recharge')
+								->where('is_admin',0)
+								->orderby('uname');
+		$alphabet = Input::get('alphabet', NULL);
+		if( ! is_null($alphabet) ) {
+			$q->where('uname','LIKE',"$alphabet%");
+		}
 		return View::make('admin.accounts.index')
-							->with('accounts',$accounts);
+							->with('accounts',$q->paginate(10));
+	}
+
+	public function postSearch()
+	{
+		$keyword = Input::get('keyword', NULL);
+		$q = Subscriber::with('Recharge')
+							->where('uname','LIKE',"%$keyword%")
+							->orderby('uname');
+							
+		return View::make("admin.accounts.search-result")
+						->with('accounts',$q->paginate(10));
 	}
 
 	public function getAdd()
@@ -57,8 +73,6 @@ Class AccountsController extends AdminBaseController {
 			$input['plan_type'] = PREPAID_PLAN;
 			
 			$account = Subscriber::create($input);
-			// if( $account->plan_type == FREE_PLAN )
-			// 	Subscriber::updateFreePlan($account->id);
 
 			$this->notifySuccess("New Subscriber added successfully: <b>{$input['uname']}</b>");
 		}
@@ -101,14 +115,6 @@ Class AccountsController extends AdminBaseController {
 			$account->fill($input);
 			if( ! $account->save() )	throw new Exception("Failed to update account.");
 			
-			// switch($account->plan_type) {
-			// 	case FREE_PLAN :
-			// 	Subscriber::updateFreePlan($account->id);
-			// 	break;
-			// 	case PREPAID_PLAN :
-			// 	Subscriber::updatePrepaidPlan($account->id);
-			// 	break;
-			// }
 			$this->notifySuccess("Account successfully updated.");
 		}
 		catch(Exception $e) {
@@ -143,7 +149,9 @@ Class AccountsController extends AdminBaseController {
 		try{
 			$profile = Subscriber::findOrFail($id);
 			$rc_history = $profile->rechargeHistory()->take(5)->get();
-			$sess_history = $profile->sessionHistory()->paginate(10);
+			$sess_history = $profile->sessionHistory()
+									->orderby('acctstarttime', 'DESC')
+									->paginate(10);
 
 			return View::make('admin.accounts.profile')
 						->with('profile',$profile)
@@ -228,7 +236,10 @@ Class AccountsController extends AdminBaseController {
 				if( ! $user->save() )	throw new Exception('Failed to change service type.');
 				if( $user->plan_type == ADVANCEPAID_PLAN ) {
 					$billing = BillingCycle::firstOrNew(['user_id'=>$user_id]);
-					$billing->fill(Input::all());
+					$input = Input::all();
+					$input['expiration'] = date("Y-m-d H:i:s", strtotime($input['expiration']));
+					// pr($input);
+					$billing->fill($input);
 					if( ! $billing->save() )	throw new Exception("Failed to save billing cycle details.");
 				}
 				if( $user->plan_type == FREE_PLAN ) {

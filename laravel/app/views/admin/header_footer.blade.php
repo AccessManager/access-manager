@@ -37,6 +37,7 @@ if( $segment == 'settings' ) {
     <head>
         <meta charset="UTF-8">
         <title>Access Manager</title>
+        <base href="{{URL::to('/')}}">
         {{HTML::style("public/css/themes/$admin_theme.css")}}
         {{HTML::style('public/css/font-awesome.min.css')}}
         {{HTML::style('public/css/bootstrap-clockpicker.min.css')}}
@@ -203,14 +204,19 @@ if( $segment == 'settings' ) {
                             </ul>
                         </li>
                     </ul> 
-                    <div class="">
+                    <!-- <div class=""> -->
+                    {{Form::open(['route'=>'subscriber.search'])}}
 <div class="input-group" style="margin-top: 5px;">
-    <input type="text" data-i-search-input="true" class="form-control col-lg-1" name="word" data-autocomplete="true" data-autocomplete-url="" placeholder="search accounts...">
-    <span class="input-group-btn"><button class="btn btn-default" type="submit">
+    {{Form::text('keyword', NULL, ['data-i-search-input'=>'true','class'=>'form-control col-lg-1',
+                                    'placeholder'=>'Search by UserName'])}}
+    <!-- <input type="text" data-i-search-input="true" class="form-control col-lg-1" name="word" data-autocomplete="true" data-autocomplete-url="" placeholder="search accounts..."> -->
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="submit">
         <i class="fa fa-search"></i>
         </button></span>
 </div>
-</div>
+{{Form::close()}}
+<!-- </div> -->
                     </div>
                 </div>
             </nav>

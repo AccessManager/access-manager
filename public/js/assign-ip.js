@@ -5,7 +5,7 @@ $(function(){
 		var ip_list = $('#ip-list');
 
 		var promise = $.ajax({
-			url : 'http://localhost/am-laravel/json/get-ip-list/'+subnet_id,
+			url : 'http://login.accessmanager.in/json/get-ip-list/'+subnet_id,
 			method : 'GET',
 		}).promise();
 		promise.done(function(result){

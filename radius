@@ -6,13 +6,9 @@ use Symfony\Component\Console\Application;
 use AccessManager\Radius\Commands\AuthorizeCommand;
 use AccessManager\Radius\Commands\AccountCommand;
 
-(new Application())
-	->add( new AuthorizeCommand() )
-	->add( new AccountCommand() )
-	->run();
-// $app = new Application();
-// $app->add(new AuthorizeCommand);
-// $app->add(new AccountCommand);
-// $app->run();
+$app = new Application();
+$app->add(new AuthorizeCommand);
+$app->add(new AccountCommand);
+$app->run();
 
 //end of file radius

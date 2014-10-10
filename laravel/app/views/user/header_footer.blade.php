@@ -26,6 +26,13 @@
 	<title>User Panel - Access Manager</title>
 	{{HTML::style("public/css/themes/$user_theme.css")}}
 	{{HTML::style('public/css/font-awesome.min.css')}}
+	{{HTML::style('public/css/alertify.core.css')}}
+    {{HTML::style('public/css/alertify-bootstrap3.css')}}
+    <style>
+		body {
+			padding-bottom: 40px;
+		}
+    </style>
 </head>
 <body>
 
@@ -96,5 +103,20 @@
 	</footer>
 	{{HTML::script('public/js/jquery.2.1.min.js')}}
 	{{HTML::script('public/js/boostrap.min.js')}}
+	{{HTML::script('public/js/alertify.js')}}
+<!-- Show Notifications via alertify.js -->
+<script type="text/javascript">
+    {{ Notification::showError('
+        alertify.error(":message");
+    ') }}
+ 
+    {{ Notification::showInfo('
+        alertify.log(":message");
+    ') }}
+ 
+    {{ Notification::showSuccess('
+        alertify.success(":message");
+    ') }}
+</script>
 </body>
 </html>
