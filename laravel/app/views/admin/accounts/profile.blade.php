@@ -219,8 +219,8 @@
                                     @endif
                                 </td>
                                 <td>{{$session->acctsessiontime}}</td>
-                                <td>{{formatBytes($session->acctinputoctets)}}</td>
                                 <td>{{formatBytes($session->acctoutputoctets)}}</td>
+                                <td>{{formatBytes($session->acctinputoctets)}}</td>
                                 <td>{{formatBytes($session->acctinputoctets + $session->acctoutputoctets)}}</td>
                                 <td>{{$session->framedipaddress}}</td>
                                 <td>{{$session->callingstationid}}</td>
