@@ -151,7 +151,7 @@ Class AccountsController extends AdminBaseController {
 			$rc_history = $profile->rechargeHistory()->take(5)->get();
 			$sess_history = $profile->sessionHistory()
 									->orderby('acctstarttime', 'DESC')
-									->paginate(10);
+									->paginate(5);
 
 			return View::make('admin.accounts.profile')
 						->with('profile',$profile)
