@@ -44,9 +44,12 @@ Class VouchersController extends AdminBaseController {
 
 	public function getRecharge()
 	{
+		$accounts = Subscriber::where('is_admin',0)
+								->where('plan_type', PREPAID_PLAN)
+								->lists('uname','id');
 		return View::make('admin.vouchers.recharge')
 						->with('plans', Plan::lists('name','id'))
-						->with('accounts', Subscriber::where('is_admin',0)->lists('uname','id'));
+						->with('accounts', $accounts);
 	}
 
 	public function postRecharge()
