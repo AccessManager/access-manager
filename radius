@@ -5,10 +5,12 @@ include_once "laravel/vendor/autoload.php";
 use Symfony\Component\Console\Application;
 use AccessManager\Radius\Commands\AuthorizeCommand;
 use AccessManager\Radius\Commands\AccountCommand;
+use AccessManager\Radius\Commands\FrinternetCronCommand;
 
 $app = new Application();
 $app->add(new AuthorizeCommand);
 $app->add(new AccountCommand);
+$app->add(new FrinternetCronCommand);
 $app->run();
 
 //end of file radius
