@@ -1,2 +1,3 @@
 laravel/vendor
 .gitignore
+composer.lock
