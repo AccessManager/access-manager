@@ -46,6 +46,7 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                             @if(count($active))
                             <?php $i = $active->getFrom(); ?>
                             @foreach($active as $account)
+                            <?php $plan = $plans[$account->session_id]; ?>
                             <tr>
                                 <td>{{$i}}</td>
                                 <td>
@@ -53,9 +54,9 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                                 </td>
                                 <td>{{$account->fname}} {{$account->lname}}</td>
                                 <td>{{$account->contact}}</td>
-                                <td>Plan Name</td>
+                                <td>{{$plan->plan_name}}</td>
                                 <td>{{$account->acctstarttime}}</td>
-                                <td>Expiration</td>
+                                <td>{{$plan->expiration}}</td>
                                 <td><button type="button" class="btn btn-danger btn-xs">
                                     <i class="fa fa-unlink"></i> disconnect</button></td>
                             </tr>

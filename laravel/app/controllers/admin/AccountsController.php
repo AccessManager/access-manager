@@ -8,20 +8,52 @@ Class AccountsController extends AdminBaseController {
 	{
 		$q = DB::table('radacct as a')
 				->select('u.id','u.uname','u.fname','u.lname','u.contact',
-						// 'r.expiration', 
-						'a.acctstarttime')
+						'a.acctstarttime','a.radacctid as session_id','u.plan_type')
 				->join('user_accounts as u','u.uname','=','a.username')
+				// ->leftJoin('user_recharges as r','r.user_id','=','u.id')
+				// ->leftJoin()
 				->orderby('u.uname')
-				// ->join('user_recharges as r','u.id','=','r.user_id')
-				// ->join('prepaid_vouchers as v', 'r.voucher_id','=','v.id')
 				->where('a.acctstoptime', NULL);
 
 		$alphabet = Input::get('alphabet', NULL);
 		if( !is_null($alphabet) ) {
 			$q->where('u.uname','LIKE',"$alphabet%");
 		}
+
+		$sessions = $q->paginate(10);
+		
+		if( ! is_null($sessions) ) {
+			$plans = [];
+			foreach( $sessions as $user ) {
+				switch( $user->plan_type ) {
+					case FREE_PLAN :
+						$plan = Freebalance::select('expiration')
+										->where('user_id', $user->id)
+										->first();
+						$plan->plan_name = 'FRiNTERNET';
+					break;
+					case PREPAID_PLAN :
+					$plan = DB::table('user_recharges as r')
+									->where('user_id',$user->id)
+									->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
+									->select('r.expiration','v.plan_name')
+									->first();
+					break;
+					case ADVANCEPAID_PLAN :
+					$plan = DB::table("ap_active_plans as p")
+								->join('billing_cycles as b','b.user_id','=','p.user_id')
+								->where('b.user_id',$user->id)
+								->select('b.expiration','p.plan_name')
+								->first();
+					break;
+				}
+				$plans[$user->session_id] = $plan;
+			}
+		}
+		// pr($sessions);
 		return View::make('admin.accounts.dashboard')
-					->with('active', $q->paginate(10));
+					->with('active', $sessions)
+					->with('plans', $plans);
 	}
 
 	public function getIndex()
