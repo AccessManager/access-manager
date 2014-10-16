@@ -22,6 +22,39 @@ Class Subscriber extends BaseModel {
 		return $this->hasMany('RadAcct', 'username', 'uname');
 	}
 
+	public static function getActiveSessionPlans($sessions)
+	{
+		$plans = [];
+		if( ! is_null($sessions) ) {
+			foreach( $sessions as $user ) {
+				switch( $user->plan_type ) {
+					case FREE_PLAN :
+						$plan = Freebalance::select('expiration')
+										->where('user_id', $user->id)
+										->first();
+						$plan->plan_name = 'FRiNTERNET';
+					break;
+					case PREPAID_PLAN :
+					$plan = DB::table('user_recharges as r')
+									->where('r.user_id',$user->id)
+									->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
+									->select('r.expiration','v.plan_name')
+									->first();
+					break;
+					case ADVANCEPAID_PLAN :
+					$plan = DB::table("ap_active_plans as p")
+								->join('billing_cycles as b','b.user_id','=','p.user_id')
+								->where('b.user_id',$user->id)
+								->select('b.expiration','p.plan_name')
+								->first();
+					break;
+				}
+				$plans[$user->session_id] = $plan;
+			}
+		}
+		return $plans;
+	}
+
 	public static function updateFreePlan($user_id)
 	{
 		$free_balance = Freebalance::where('user_id', $user_id)->first();
@@ -63,23 +96,7 @@ Class Subscriber extends BaseModel {
 		}
 		$free_balance->fill($new_balance);
 		$free_balance->save();
-		// $recharge = Recharge::where('user_id', $user_id)
-		// 						->first();
-		// if( ! is_null($recharge) )
-		// $recharge->delete();
 	}
-
-	// public static function updatePrepaidPlan($user_id)
-	// {
-
-	// 	$recharge = Recharge::where('user_id', $user_id)
-	// 								->first();
-	// 	// if( ! is_null($recharge) )
-	// 	// $recharge->delete();
-	// 	$free_balance = Freebalance::where(['user_id'=>$user_id])->first();
-	// 	if( ! is_null($free_balance) )
-	// 		$free_balance->delete();
-	// }
 
 	public static function getActiveServices(Subscriber $profile)
 	{
@@ -109,13 +126,7 @@ Class Subscriber extends BaseModel {
 		}
 	}
 
-	// public static function addAccount($input)
-	// {
-	// 	$account = new Subscriber;
-	// 	$account->fill($input);
 
-	// 	if( ! $account->save() ) {
-	// 		throw new Exception("Account creation failed.");
-	// 	}
-	// }
 }
+
+//end of file Subscriber.php

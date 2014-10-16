@@ -10,8 +10,6 @@ Class AccountsController extends AdminBaseController {
 				->select('u.id','u.uname','u.fname','u.lname','u.contact',
 						'a.acctstarttime','a.radacctid as session_id','u.plan_type')
 				->join('user_accounts as u','u.uname','=','a.username')
-				// ->leftJoin('user_recharges as r','r.user_id','=','u.id')
-				// ->leftJoin()
 				->orderby('u.uname')
 				->where('a.acctstoptime', NULL);
 
@@ -19,38 +17,10 @@ Class AccountsController extends AdminBaseController {
 		if( !is_null($alphabet) ) {
 			$q->where('u.uname','LIKE',"$alphabet%");
 		}
-
 		$sessions = $q->paginate(10);
 		
-		if( ! is_null($sessions) ) {
-			$plans = [];
-			foreach( $sessions as $user ) {
-				switch( $user->plan_type ) {
-					case FREE_PLAN :
-						$plan = Freebalance::select('expiration')
-										->where('user_id', $user->id)
-										->first();
-						$plan->plan_name = 'FRiNTERNET';
-					break;
-					case PREPAID_PLAN :
-					$plan = DB::table('user_recharges as r')
-									->where('r.user_id',$user->id)
-									->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
-									->select('r.expiration','v.plan_name')
-									->first();
-					break;
-					case ADVANCEPAID_PLAN :
-					$plan = DB::table("ap_active_plans as p")
-								->join('billing_cycles as b','b.user_id','=','p.user_id')
-								->where('b.user_id',$user->id)
-								->select('b.expiration','p.plan_name')
-								->first();
-					break;
-				}
-				$plans[$user->session_id] = $plan;
-			}
-		}
-		// pr($sessions);
+		$plans = Subscriber::getActiveSessionPlans($sessions);
+
 		return View::make('admin.accounts.dashboard')
 					->with('active', $sessions)
 					->with('plans', $plans);
