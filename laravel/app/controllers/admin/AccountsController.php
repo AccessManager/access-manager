@@ -34,7 +34,7 @@ Class AccountsController extends AdminBaseController {
 					break;
 					case PREPAID_PLAN :
 					$plan = DB::table('user_recharges as r')
-									->where('user_id',$user->id)
+									->where('r.user_id',$user->id)
 									->join('prepaid_vouchers as v','v.id','=','r.voucher_id')
 									->select('r.expiration','v.plan_name')
 									->first();
