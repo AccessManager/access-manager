@@ -217,7 +217,7 @@
                                     -
                                     @endif
                                 </td>
-                                <td>{{$session->acctsessiontime}}</td>
+                                <td>{{formatTime($session->acctsessiontime)}}</td>
                                 <td>{{formatBytes($session->acctoutputoctets)}}</td>
                                 <td>{{formatBytes($session->acctinputoctets)}}</td>
                                 <td>{{formatBytes($session->acctinputoctets + $session->acctoutputoctets)}}</td>

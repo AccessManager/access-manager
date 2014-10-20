@@ -34,6 +34,26 @@ function makeExpiry($units, $unit, $format = 'Y-m-d H:i:s')
   exit();
 }
 
+function formatTime($seconds)
+{
+  $mins = intval($seconds/60);
+  $seconds = $seconds%60;
+  $Hrs = intval($mins/60);
+  $mins = $mins%60;
+  $result = NULL;
+
+  if( $Hrs != 0 ) {
+    $result .= " $Hrs Hrs";
+  }
+  if( $mins != 0 ) {
+    $result .= " $mins Mins";
+  }
+  if( $seconds != 0 ) {
+    $result .= " $seconds Secs";
+  }
+  return $result;
+}
+
 function formatBytes($bytes, $precision = 2) { 
     $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
 

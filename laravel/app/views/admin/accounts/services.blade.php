@@ -93,7 +93,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <h5>
-                                    {{$plan->time_limit}}
+                                    {{formatTime($plan->time_limit)}}
                                 </h5>
                             </div>
                         </div>

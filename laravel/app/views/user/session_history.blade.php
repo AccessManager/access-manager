@@ -37,7 +37,7 @@ Sessions History
                                     @endif
                                 </td>
                                 <td>
-                                    {{$session->acctsessiontime}}
+                                    {{formatTime($session->acctsessiontime)}}
                                 </td>
                                 <td>
                                     {{formatBytes($session->acctoutputoctets)}}
