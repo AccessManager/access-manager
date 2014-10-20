@@ -149,15 +149,14 @@ Class AccountsController extends AdminBaseController {
 	public function getProfile($id)
 	{
 		try{
-			$profile = Subscriber::findOrFail($id);
-			$rc_history = $profile->rechargeHistory()->take(5)->get();
+			$profile = Subscriber::with('Recharge')->findOrFail($id);
+			
 			$sess_history = $profile->sessionHistory()
 									->orderby('acctstarttime', 'DESC')
 									->paginate(5);
 
 			return View::make('admin.accounts.profile')
 						->with('profile',$profile)
-						->with('rc_history', $rc_history)
 						->with('sess_history', $sess_history);
 		}
 		catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -193,11 +192,14 @@ Class AccountsController extends AdminBaseController {
 	public function getActiveServices($user_id)
 	{
 		$profile = Subscriber::findOrFail($user_id);
+		$rc_history = $profile->rechargeHistory()->paginate(5);
 		$plan = Subscriber::getActiveServices($profile);
 		$framedIP = SubnetIP::where('user_id',$user_id)->first();
 		$framedRoute = UserRoute::where('user_id',$user_id)->first();
+
 		return View::make("admin.accounts.services")
 					->with('profile', $profile)
+					->with('rc_history', $rc_history)
 					->with('plan', $plan)
 					->with('framedIP',$framedIP)
 					->with('framedRoute', $framedRoute);

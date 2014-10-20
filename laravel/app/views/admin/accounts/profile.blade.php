@@ -183,7 +183,6 @@
 
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
   <li class="active"><a href="#session" data-toggle="tab">Recent Sessions</a></li>
-  <!-- <li><a href="#recharge" data-toggle="tab">Recent Recharges</a></li> -->
 </ul>
 
 <div id="myTabContent" class="tab-content">
@@ -240,45 +239,6 @@
             </div>
             <hr>
   </div>
-<!--   <div class="tab-pane fade" id="recharge">
-    <table class="table table-striped table-responsive table-hover table-condensed">
-        <thead>
-            <tr>
-                <th>Service Plan</th>
-                <th>Recharged On</th>
-                <th>Method</th>
-                <th>Plan Validity</th>
-                <th>Plan Type</th>
-                <th>Time Limit</th>
-                <th>Data Limit</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if(count($rc_history))
-            <?php $i = 1; ?>
-            @foreach($rc_history as $voucher)
-            <tr>
-                <td>{{$voucher->plan_name}}</td>
-                <td>{{$voucher->updated_at}}</td>
-                <td>{{$voucher->method}}</td>
-                <td>{{$voucher->validity}} {{$voucher->validity_unit}}</td>
-                <td>{{$voucher->plan_type == 1 ? 'Limited' : 'Unlimited';}}</td>
-                @if(isset($voucher->limits))
-                <td>{{$voucher->limits->time_limit}} {{$voucher->limits->time_unit}}</td>
-                <td>{{$voucher->limits->data_limit}} {{$voucher->limits->data_unit}}</td>
-                @else
-                <td>N/A</td>
-                <td>N/A</td>
-                @endif
-            </tr>
-            <?php $i++; ?>
-            @endforeach
-            @else
-            <tr> <td colspan='8'></td></tr>
-            @endif
-        </tbody>
-    </table>
-    <a href="" class="btn btn-primary pull-right">View Full History</a>
-  </div>
- -->
+  
+
 @stop
