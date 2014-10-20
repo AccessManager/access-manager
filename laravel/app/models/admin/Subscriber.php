@@ -111,13 +111,18 @@ Class Subscriber extends BaseModel {
 						->first();
 			break;
 			case FREE_PLAN :
-			return Freebalance::where('user_id', $profile->id)->first();
+			return Freebalance::where('user_id', $profile->id)
+								->select('plan_type','limit_type','time_balance as time_limit',
+									'data_balance as data_limit')
+								->first();
 			break;
 			case ADVANCEPAID_PLAN :
-			return APActivePlan::where('user_id',$profile->id)
+			return DB::table('ap_active_plans as p')
+							->where('p.user_id',$profile->id)
 							->select('plan_type','limit_type','time_balance as time_limit',
-								'data_balance as data_limit','plan_name')
-							->leftJoin('ap_limits as l','l.id','=','ap_active_plans.limit_id')
+								'data_balance as data_limit','plan_name','c.expiration')
+							->leftJoin('ap_limits as l','l.id','=','p.limit_id')
+							->join('billing_cycles as c','c.user_id','=','.p.user_id')
 							->first();
 			break;
 			default:

@@ -19,16 +19,6 @@ if( ! function_exists('mikrotikRateLimit')) {
       }
 }
 
-// if( ! function_exists('mikrotikRateLimit')) {
-//   function mikrotikRateLimit($object, $prefix = NULL)
-//     {
-//       $v = (array) $object;
-      
-//       return         "{$v[$prefix.'max_up']}{$v[$prefix.'max_up_unit'][0]}/".
-//                          "{$v[$prefix.'max_down']}{$v[$prefix.'max_down_unit'][0]}";
-//     }
-// }
-
 function makeExpiry($units, $unit, $format = 'Y-m-d H:i:s')
   {
     $val = Carbon::now();
@@ -52,8 +42,8 @@ function formatBytes($bytes, $precision = 2) {
     $pow = min($pow, count($units) - 1); 
 
     // Uncomment one of the following alternatives
-    // $bytes /= pow(1024, $pow);
-    $bytes /= (1 << (10 * $pow)); 
+    $bytes /= pow(1024, $pow);
+    // $bytes /= (1 << (10 * $pow)); 
 
     return round($bytes, $precision) . ' ' . $units[$pow]; 
-} 
+}
