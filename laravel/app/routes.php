@@ -151,7 +151,8 @@ Route::controller('subscribers', 'AccountsController',[
 			'postAssignRoute'	=>		'subscriber.route',
 			'getChangeServiceType'	=>	'subscriber.servicetype.form',
 			'postChangeServiceType'	=>	'subscriber.servicetype',
-			'postSearch'		=>		'subscriber.search'
+			'postSearch'		=>		'subscriber.search',
+			'postDisconnect'	=>		'subscriber.disconnect',
 	]);
 
 Route::controller('prepaid-vouchers','VouchersController',[

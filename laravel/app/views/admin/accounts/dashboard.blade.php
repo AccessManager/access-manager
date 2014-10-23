@@ -57,8 +57,14 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                                 <td>{{$plan->plan_name}}</td>
                                 <td>{{$account->acctstarttime}}</td>
                                 <td>{{$plan->expiration}}</td>
-                                <td><button type="button" class="btn btn-danger btn-xs">
-                                    <i class="fa fa-unlink"></i> disconnect</button></td>
+                                <td>
+                                {{Form::open(['route'=>'subscriber.disconnect'])}}
+                                    {{Form::hidden('session_id',$account->session_id)}}
+                                    <button type="submit" class="btn btn-danger btn-xs">
+                                    <i class="fa fa-unlink"></i> disconnect</button>    
+                                {{Form::close()}}
+                                
+                                    </td>
                             </tr>
                             <?php $i++; ?>
                             @endforeach

@@ -1,4 +1,6 @@
 <?php
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 Class AccountsController extends AdminBaseController {
 
@@ -24,6 +26,31 @@ Class AccountsController extends AdminBaseController {
 		return View::make('admin.accounts.dashboard')
 					->with('active', $sessions)
 					->with('plans', $plans);
+	}
+
+	public function postDisconnect()
+	{
+		$session_id = Input::get('session_id');
+
+		// pr($session_id);
+
+		$session = DB::table('radacct as a')
+						->join('nas as n','n.nasname','=','a.nasipaddress')
+						->select('a.framedipaddress','a.username','a.nasipaddress','n.secret')
+						->where('radacctid', $session_id)
+						->first();
+		$exec = "echo \" User-Name={$session->username}, Framed-IP-Address={$session->framedipaddress} \" ".
+                                     "| radclient {$session->nasipaddress}:3799 disconnect {$session->secret}";
+        $process = new Process($exec);
+        try {
+        	$process->mustRun();
+        }
+        catch(ProcessFailedException $e) {
+        	$this->notifyError($e->getMessage());
+        	return Redirect::back();
+        }
+        $this->notifySuccess("Session Disconnected.");
+		return Redirect::back();
 	}
 
 	public function getIndex()
