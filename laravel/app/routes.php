@@ -72,7 +72,7 @@ Route::group(['prefix'=>'user-panel','before'=>'isUser'], function(){
 	Route::controller('my-account','UserController',[
 			  'getIndex'   =>	'user-panel',
 		  	 'getRecharge' =>	'user.recharge.form',
-		 'postPinRecharge' =>	'user.pin.recharge',
+		 	'postRecharge' =>	'user.recharge',
      'getRechargeHistory'  =>	'user.recharge.history',
 	  'getSessionHistory'  =>	'user.session.history',
 	  'getChangePassword'  =>	'user.password.form',

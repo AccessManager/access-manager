@@ -18,7 +18,7 @@ Class UserController extends UserBaseController {
 					->with('plans', $plans);
 	}
 
-	public function postPinRecharge()
+	public function postRecharge()
 	{
 		// pr(Input::all());
 		Recharge::viaPin(Input::get('pin'), Auth::user()->id);
@@ -54,8 +54,6 @@ Class UserController extends UserBaseController {
 
 	public function postChangePassword()
 	{
-		// $input = Input::all();
-		// pr($input);
 		$user_id = Input::get('user_id', 0);
 		$current = Input::get('current', NULL);
 
