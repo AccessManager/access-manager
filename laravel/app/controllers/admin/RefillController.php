@@ -19,11 +19,9 @@ class RefillController extends AdminBaseController {
 	{
 		$count = Input::get('count', NULL);
 		$input = Input::except('count');
-		// echo "<pre>";
 		
 		$input['expires_on'] = $this->_makeExpiry($input['validity'], $input['validity_unit']);
-		// print_r($input);
-		// exit;
+
 		for( $i = 0; $i < $count; $i++ ) {
 			$input['pin'] = $this->_generatePin();
 			if ( ! Refillcoupons::create($input) ) {
@@ -38,17 +36,18 @@ class RefillController extends AdminBaseController {
 	public function getRecharge()
 	{
 		$accounts = Subscriber::where('is_admin',0)
-						->where('plan_type', PREPAID_PLAN)
-						->orWhere('plan_type',FREE_PLAN)
+						->where(function($query){
+							$query->where('plan_type', PREPAID_PLAN)
+							->orWhere('plan_type',FREE_PLAN);
+						})
+						->orderby('uname')
 						->lists('uname','id');
-
 		return View::make('admin.refill_coupons.recharge')
 						->with('accounts', $accounts);
 	}
 
 	public function postRecharge()
 	{
-		echo "<pre>";
 		try {
 			Refillcoupons::viaPin(Input::get('pin'), Input::get('user_id'));
 		}
@@ -56,7 +55,7 @@ class RefillController extends AdminBaseController {
 			$this->notifyError($e->getMessage());
 			return Redirect::back();
 		}
-		return Redirect::back();
+			return Redirect::back();
 	}
 
 	private static function _generatePin()
