@@ -1,5 +1,4 @@
 <?php
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 Class AccountsController extends AdminBaseController {
@@ -30,20 +29,9 @@ Class AccountsController extends AdminBaseController {
 
 	public function postDisconnect()
 	{
-		$session_id = Input::get('session_id');
-
-		// pr($session_id);
-
-		$session = DB::table('radacct as a')
-						->join('nas as n','n.nasname','=','a.nasipaddress')
-						->select('a.framedipaddress','a.username','a.nasipaddress','n.secret')
-						->where('radacctid', $session_id)
-						->first();
-		$exec = "echo \" User-Name={$session->username}, Framed-IP-Address={$session->framedipaddress} \" ".
-                                     "| radclient {$session->nasipaddress}:3799 disconnect {$session->secret}";
-        $process = new Process($exec);
         try {
-        	$process->mustRun();
+        	$session_id = Input::get('session_id');
+        	Subscriber::destroySession($session_id);
         }
         catch(ProcessFailedException $e) {
         	$this->notifyError($e->getMessage());
@@ -143,7 +131,14 @@ Class AccountsController extends AdminBaseController {
 			if( ! $account )		throw new Exception("No such user with id:{$input['id']}");
 			$account->fill($input);
 			if( ! $account->save() )	throw new Exception("Failed to update account.");
-			
+			if( $account->status == DEACTIVE ) {
+				$sessions = RadAcct::where('username',$account->uname)
+									->select('radacctid')
+									->get();
+				foreach($sessions as $session) {
+					Subscriber::destroySession($session->radacctid);
+				}
+			}
 			$this->notifySuccess("Account successfully updated.");
 		}
 		catch(Exception $e) {

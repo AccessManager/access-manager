@@ -1,4 +1,5 @@
 <?php
+use Symfony\Component\Process\Process;
 
 Class Subscriber extends BaseModel {
 
@@ -129,6 +130,19 @@ Class Subscriber extends BaseModel {
 			throw new Exception("Failed to identify service type: {$profile->plan_type}");
 			break;
 		}
+	}
+
+	public static function destroySession($session_id)
+	{
+		$session = DB::table('radacct as a')
+						->join('nas as n','n.nasname','=','a.nasipaddress')
+						->select('a.framedipaddress','a.username','a.nasipaddress','n.secret')
+						->where('radacctid', $session_id)
+						->first();
+		$exec = "echo \" User-Name={$session->username}, Framed-IP-Address={$session->framedipaddress} \" ".
+                                     "| radclient {$session->nasipaddress}:3799 disconnect {$session->secret}";
+        $process = new Process($exec);
+        $process->mustRun();
 	}
 
 
