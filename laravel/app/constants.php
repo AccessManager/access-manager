@@ -1,5 +1,9 @@
 <?php
 
+if( ! defined('ACTIVE') )
+	define('ACTIVE',1)
+if( ! defined('DEACTIVE'))
+	define('DEACTIVE',0)
 if( ! defined('MB') )
 define('MB', 1048576);
 
