@@ -33,7 +33,6 @@
                                 <th>Expires On</th>
                                 <th>Used By</th>
                                 <th>Used On</th>
-                                <th>Method</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,7 +66,6 @@
                                 <td>
                                     {{strtotime($voucher->updated_at) == strtotime($voucher->created_at) ? 'Unused' : date('d-M-y',strtotime($voucher->updated_at))}}
                                 </td>
-                                <td>{{$voucher->method}}</td>
                         </tr>
                         <?php $i++; ?>
                         @endforeach
