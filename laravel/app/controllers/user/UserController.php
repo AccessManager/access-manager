@@ -20,9 +20,28 @@ Class UserController extends UserBaseController {
 
 	public function postRecharge()
 	{
-		// pr(Input::all());
-		Recharge::viaPin(Input::get('pin'), Auth::user()->id);
-		return Redirect::route(self::HOME);
+		try {
+			$voucher_type = Input::get('voucher_type', NULL);
+			$pin = Input::get('pin', NULL);
+
+			if( $voucher_type == NULL ) throw new Exception("Select Voucher Type.");
+			if( $pin == NULL ) throw new Exception("Please enter a valid PIN");
+
+			switch($voucher_type) {
+				case 'prepaid' :
+					Recharge::viaPin($pin, Auth::id() );
+				break;
+				case 'refill' :
+					Refillcoupons::viaPin($pin, Auth::id() );
+				break;
+			}
+			return Redirect::route(self::HOME);
+		}
+			catch(Exception $e)
+			{
+				$this->notifyError($e->getMessage());
+				return Redirect::back();
+			}
 	}
 
 	public function getRechargeHistory()
