@@ -6,8 +6,6 @@ class Refillcoupons extends BaseModel {
 	protected $fillable = ['pin','user_id','expires_on',
 							'have_data','data_limit','data_unit',
 							'have_time','time_limit','time_unit',];
-	// public $timestamps = FALSE;
-
 
 	public static function viaPin($pin, $uid)
 	{
@@ -15,9 +13,9 @@ class Refillcoupons extends BaseModel {
 			DB::transaction(function() use($pin, $uid){
 				Refillcoupons::now($pin, $uid);
 				$coupon = Refillcoupons::where('pin',$pin)
-									->first();
-				$coupon->user_id = $uid;
-				$coupon->save();
+									->update([
+											'user_id'	=>		$uid,
+										]);
 			});
 			Notification::success("Refill coupon successfully applied.");
 		}
