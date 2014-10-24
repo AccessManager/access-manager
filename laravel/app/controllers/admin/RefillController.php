@@ -7,7 +7,7 @@ class RefillController extends AdminBaseController {
 	public function getIndex()
 	{
 		return View::make('admin.refill_coupons.index')
-					->with('vouchers',Refillcoupons::paginate(10));
+					->with('vouchers',Refillcoupons::getAll());
 	}
 
 	public function getGenerate()

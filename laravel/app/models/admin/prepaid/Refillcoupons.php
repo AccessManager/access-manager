@@ -7,6 +7,15 @@ class Refillcoupons extends BaseModel {
 							'have_data','data_limit','data_unit',
 							'have_time','time_limit','time_unit',];
 
+	public static function getAll()
+	{
+		return DB::table('refill_coupons as c')
+						->leftJoin('user_accounts as u','u.id','=','c.user_id')
+						->select("u.uname",'c.*')
+						->paginate(10);
+	}
+
+
 	public static function viaPin($pin, $uid)
 	{
 		try {
