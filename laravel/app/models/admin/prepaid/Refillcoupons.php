@@ -41,13 +41,13 @@ class Refillcoupons extends BaseModel {
 	public static function now($pin, $uid, $method='pin')
 	{
 		$coupon = self::where('pin',$pin)->firstOrFail();
+		if( $coupon->user_id != NULL ) {
+			$this->notifyError("voucher already applied.");
+		}
 		$subscriber = Subscriber::find($uid);
 
 		switch($subscriber->plan_type) {
 			case PREPAID_PLAN :
-				// $recharge = Recharge::where('user_id',$uid)
-				// 			->select('id','plan_type','r.limit_id','r.expiration')
-				// 			 ->first();
 				$recharge = DB::table('user_recharges as r')
 							->where('r.user_id', $uid)
 							->join('prepaid_vouchers as v','r.voucher_id','=','v.id')
