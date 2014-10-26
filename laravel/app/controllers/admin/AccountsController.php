@@ -132,12 +132,7 @@ Class AccountsController extends AdminBaseController {
 			$account->fill($input);
 			if( ! $account->save() )	throw new Exception("Failed to update account.");
 			if( $account->status == DEACTIVE ) {
-				$sessions = RadAcct::where('username',$account->uname)
-									->select('radacctid')
-									->get();
-				foreach($sessions as $session) {
-					Subscriber::destroySession($session->radacctid);
-				}
+				Subscriber::destroyAllSessions($account);
 			}
 			$this->notifySuccess("Account successfully updated.");
 		}
@@ -256,23 +251,29 @@ Class AccountsController extends AdminBaseController {
 	{
 		try {
 			$user_id = Input::get('user_id');
-			DB::transaction(function()use($user_id){
-				$user = Subscriber::findOrFail($user_id);
-				$user->plan_type = Input::get('plan_type');
+			$user = Subscriber::findOrFail( $user_id );
+			$disconnect = new stdClass;
+			$disconnect->set = FALSE;
+			DB::transaction(function()use($user, $disconnect){
+				$plan_type = Input::get('plan_type');
+				if( $user->plan_type != $plan_type)	$disconnect->set = TRUE;
+				
+				$user->plan_type = $plan_type;
 				if( ! $user->save() )	throw new Exception('Failed to change service type.');
 				if( $user->plan_type == ADVANCEPAID_PLAN ) {
-					$billing = BillingCycle::firstOrNew(['user_id'=>$user_id]);
+					$billing = BillingCycle::firstOrNew(['user_id'=>$user->id]);
 					$input = Input::all();
 					$input['expiration'] = date("Y-m-d H:i:s", strtotime($input['expiration']));
-					// pr($input);
 					$billing->fill($input);
 					if( ! $billing->save() )	throw new Exception("Failed to save billing cycle details.");
 				}
 				if( $user->plan_type == FREE_PLAN ) {
-					Subscriber::updateFreePlan($user_id);
+					Subscriber::updateFreePlan($user->id);
 				}
 			});
-
+			if( $disconnect->set ) {
+				Subscriber::destroyAllSessions($user);
+			}
 			$this->notifySuccess("Service Type Updated.");
 		}
 		catch(Exception $e)

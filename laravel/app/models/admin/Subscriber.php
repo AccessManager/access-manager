@@ -145,6 +145,25 @@ Class Subscriber extends BaseModel {
         $process->mustRun();
 	}
 
+	public static function destroyAllSessions(Subscriber $user)
+	{
+		$sessions = DB::table('radacct as a')
+						->join('nas as n','n.nasname','=','a.nasipaddress')
+						->where('a.username',$user->uname)
+						->where('a.acctstoptime', NULL)
+						->select('a.framedipaddress','a.nasipaddress','n.secret')
+						->orderby('a.acctstarttime')
+						->get();
+		if( ! is_null($sessions) ) {
+			foreach( $sessions as $session ) {
+				$exec = "echo \" User-Name={$user->uname}, Framed-IP-Address={$session->framedipaddress} \" ".
+		                                     "| radclient {$session->nasipaddress}:3799 disconnect {$session->secret}";
+		        $process = new Process($exec);
+		        $process->mustRun();
+			}
+		}
+	}
+
 
 }
 
