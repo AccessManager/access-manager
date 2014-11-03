@@ -12,6 +12,7 @@ class Refillcoupons extends BaseModel {
 		return DB::table('refill_coupons as c')
 						->leftJoin('user_accounts as u','u.id','=','c.user_id')
 						->select("u.uname",'c.*')
+						->orderby('created_at','DESC')
 						->paginate(10);
 	}
 
