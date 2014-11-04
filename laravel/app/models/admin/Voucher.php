@@ -28,8 +28,11 @@ Class Voucher extends BaseModel {
 	public static function variables($ids)
 	{
 		return DB::table('prepaid_vouchers as v')
-					->select('v.pin','v.expires_on','v.plan_name','v.plan_type','v.validity',
-							'v.validity_unit','v.sim_sessions','v.interim_updates','v.price')
+					->select('v.pin','v.expires_on','v.plan_name','v.plan_type','v.sim_sessions','v.price',
+							DB::raw('CONCAT(v.validity,v.validity_unit) as voucher_validity'),
+							'l.limit_type','l.time_limit','l.time_unit','l.data_limit','l.data_unit',
+							'l.aq_access')
+					->leftJoin('voucher_limits as l','l.id','=','v.limit_id')
 					->whereIn('v.id',$ids)
 					->get();
 	}
