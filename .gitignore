@@ -3,3 +3,4 @@ laravel/vendor
 composer.lock
 *.sublime-*
 laravel/app/config
+public/img/internet-login
