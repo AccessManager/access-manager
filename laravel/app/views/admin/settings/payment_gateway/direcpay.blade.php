@@ -1,9 +1,9 @@
 @extends('admin.settings.setting')
 @section('title')
-Paypal
+Direcpay
 @stop
 <?php
-if($paypal->status == 1) {
+if($direcpay->status == 1) {
 	$hidden = NULL;
 } else {
 	$hidden = 'hidden';
@@ -12,19 +12,20 @@ if($paypal->status == 1) {
 @section('settings_container')
 
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+<li>
+  {{link_to_route('setting.paypal','PayPal')}}
+</li>
   <li class="active">
-    {{link_to_route('setting.paypal','Paypal')}}
-  </li>
-  <li>
     {{link_to_route('setting.direcpay','Direcpay')}}
   </li>
 </ul>
+
 			<div class="row">
 	<div class="col-lg-7 col-lg-offset-1">
 
-{{Form::model($paypal,['route'=>['setting.paypal'],'class'=>'form-horizontal','role'=>'form'])}}
+{{Form::model($direcpay,['route'=>['setting.direcpay'],'class'=>'form-horizontal','role'=>'form'])}}
 
-{{Form::hidden('id',$paypal->id)}}
+{{Form::hidden('id',$direcpay->id)}}
 {{Form::hidden('status',0)}}
 {{Form::hidden('sandbox', 0)}}
 <fieldset>
@@ -35,15 +36,15 @@ if($paypal->status == 1) {
       </div>
   </div>
     <div class="form-group smtp {{$hidden}}">
-      {{Form::label('email', 'Email Address', ['class'=>'col-lg-4 control-label'])}}
+      {{Form::label('email', 'Merchant ID', ['class'=>'col-lg-4 control-label'])}}
       <div class="col-lg-8">
-        {{Form::text('email', NULL, ['class'=>'form-control','id'=>'email','placeholder'=>'email address to be used'])}}
+        {{Form::text('mid', NULL, ['class'=>'form-control','id'=>'email','placeholder'=>'Your Merchant ID Here.'])}}
       </div>
   </div>
   <div class="form-group smtp {{$hidden}}">
-      {{Form::label('currency', 'Currency', ['class'=>'col-lg-4 control-label'])}}
+      {{Form::label('email', 'Encryption Key', ['class'=>'col-lg-4 control-label'])}}
       <div class="col-lg-8">
-      	{{Form::select('currency', $currencies, NULL, ['class'=>'form-control','id'=>'currency'])}}
+        {{Form::text('mid', NULL, ['class'=>'form-control','id'=>'email','placeholder'=>'Your Encryption Key Here.'])}}
       </div>
   </div>
   <div class="form-group smtp {{$hidden}}">

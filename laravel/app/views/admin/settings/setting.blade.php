@@ -14,6 +14,7 @@ switch($segment) {
 	case 'email':
 		$smtp = 'active';
 			break;
+	case 'direcpay':
 	case 'paypal':
 		$paypal = 'active';
 			break;

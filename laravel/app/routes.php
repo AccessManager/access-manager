@@ -236,6 +236,8 @@ Route::controller('settings','SettingsController',[
 			'postSmtp'			=>		'setting.smtp',
 			'getPaypal'			=>		'setting.paypal.form',
 			'postPaypal'		=>		'setting.paypal',
+			'getDirecpay'		=>		'setting.direcpay.form',
+			'postDirecpay'		=>		'setting.direcpay',
 			'getThemes'			=>		'setting.themes.form',
 			'postThemes'		=>		'setting.themes',
 	]);
