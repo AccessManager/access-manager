@@ -16,6 +16,16 @@ class Refillcoupons extends BaseModel {
 						->paginate(10);
 	}
 
+	public static function variables($ids)
+	{
+		return DB::table('refill_coupons as c')
+					->select('c.have_time','c.have_data','c.expires_on','c.created_at',
+						DB::raw('CONCAT(c.time_limit,c.time_unit) as time_limit'),
+						DB::raw('CONCAT(c.data_limit,c.data_unit) as data_limit')
+						)
+					->whereIn('c.id',$ids)
+					->get();
+	}
 
 	public static function viaPin($pin, $uid)
 	{
