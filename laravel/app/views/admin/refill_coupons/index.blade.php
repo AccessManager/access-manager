@@ -13,7 +13,8 @@
             
             <hr />
             @if(count($vouchers))
-            {{Form::open([])}}
+            {{Form::open(['route'=>'voucher.handle'])}}
+            {{Form::hidden('type','refill_coupon')}}
             @endif
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
