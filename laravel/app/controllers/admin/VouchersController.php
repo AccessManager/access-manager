@@ -84,11 +84,24 @@ Class VouchersController extends AdminBaseController {
 		$result = NULL;
 		$tpl_id = Input::get('template', 0);
 		$count = Input::get('count', 1);
+		$type = Input::get('type');
 		$voucher_ids = Session::get('vouchers',['0']);
 		$parser = new TemplateParser;
 
 		$template = VoucherTemplate::find($tpl_id);
-		$vouchers = Voucher::variables($voucher_ids);
+
+		switch( $type ) {
+			case 'prepaid_voucher' :
+			$vouchers = Voucher::variables($voucher_ids);	
+			break;
+			case 'refill_coupon' :
+			$vouchers = refillcoupons::variables($voucher_ids);
+			break;
+			default:
+			throw new Exception("Could not determine form type. Could not proceed.");
+			break;
+		}
+		
 		$i = 1;
 		foreach($vouchers as $voucher) {
 			$parser->initData((array)$voucher);
