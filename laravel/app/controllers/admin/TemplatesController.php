@@ -22,9 +22,12 @@ Class TemplatesController extends AdminBaseController {
 		$input = Input::all();
 
 		//validation input here.
-		
-		$this->flash(VoucherTemplate::create($input));
 
+		if( VoucherTemplate::create($input) ) {
+			$this->notifySuccess("Voucher Template Created.");
+		} else {
+			$this->notifyError("Voucher Template Creation Failed.");
+		}
 		return Redirect::route(self::VoucherHome);
 	}
 
@@ -49,7 +52,11 @@ Class TemplatesController extends AdminBaseController {
 		try{
 			$tpl = VoucherTemplate::findOrFail($input['id']);
 			$tpl->fill( $input );
-			$this->flash( $tpl->save() );
+			if( $tpl->save() ) {
+				$this->notifySuccess("Voucher Template Updated.");
+			} else {
+				$this->notifyError("Voucher Template Updation Failed.");
+			}
 			return Redirect::route(self::VoucherHome);
 		}
 		catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
