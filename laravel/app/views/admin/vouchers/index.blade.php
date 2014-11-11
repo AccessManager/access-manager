@@ -14,6 +14,7 @@
             <hr />
             @if(count($vouchers))
             {{Form::open(['route'=>'voucher.handle'])}}
+            {{Form::hidden('type','prepaid_voucher')}}
             @endif
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
