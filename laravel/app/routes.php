@@ -46,6 +46,20 @@ Route::post('admin/login',[
 	'uses'		=>		'LoginController@postAdmin',
 	]);
 
+Route::get('internet/login',[
+	'as'		=>		'internet.login.form',
+	'uses'		=>		'LoginController@getInternetLogin'
+	]);
+
+Route::post('internet/login',[
+	'as'		=>		'internet.login',
+	'uses'		=>		'LoginController@postInternetLogin'
+	]);
+Route::post('internet/authorize',[
+	'as'		=>		'internet.login.authorize',
+	'uses'		=>		'LoginController@postAuthorizeInternetLogin',
+	]);
+
 Route::controller('/login','LoginController',[
 	'getIndex'		=>		'user.login.form',
 	'postLogin'		=>		'user.login',
