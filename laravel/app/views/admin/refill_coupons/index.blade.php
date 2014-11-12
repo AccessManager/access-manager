@@ -43,7 +43,7 @@
                             @foreach($vouchers as $voucher)
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="vouchers[]" value="{{$voucher->id}}" class="checkbox fa fa-square-o">
+                                    <input type="checkbox" name="vouchers[]" value="{{$voucher->id}}" class="checkbox">
                                 </td>
                                 <td>{{$i}}</td>
                                 <td>{{$voucher->pin}}</td>
