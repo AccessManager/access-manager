@@ -59,6 +59,14 @@ Route::post('internet/authorize',[
 	'as'		=>		'internet.login.authorize',
 	'uses'		=>		'LoginController@postAuthorizeInternetLogin',
 	]);
+Route::get('user/self-registration',[
+	'as'		=>		'user.selfregistration.form',
+	'uses'		=>		'LoginController@getSelfRegister'
+	]);
+Route::post('user/self-registration',[
+	'as'		=>		'user.selfregistration',
+	'uses'		=>		'LoginController@postSelfRegister'
+	]);
 
 Route::controller('/login','LoginController',[
 	'getIndex'		=>		'user.login.form',
