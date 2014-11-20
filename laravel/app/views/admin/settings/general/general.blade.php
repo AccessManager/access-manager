@@ -17,6 +17,7 @@ General
         <div class="col-lg-7 col-lg-offset-1">
       {{Form::model($general,['route'=>['setting.general'],'class'=>'form-horizontal','role'=>'form'])}}
       {{Form::hidden('id',$general->id)}}
+      {{Form::hidden('self_signup',0)}}
       <fieldset>
           <div class="form-group">
             {{Form::label('idle', 'Idle Timeout', ['class'=>'col-lg-4 control-label'])}}
@@ -27,7 +28,7 @@ General
         <div class="form-group">
             {{Form::label('self-registration', 'User Self Registration', ['class'=>'col-lg-4 control-label'])}}
             <div class="col-lg-8">
-              {{Form::checkbox('self-registration', 1, false, ['class'=>'checkbox','id'=>'self-registration'])}}
+              {{Form::checkbox('self_signup', 1, false, ['class'=>'checkbox','id'=>'self-registration'])}}
             </div>
         </div>
       <div class="form-group">
