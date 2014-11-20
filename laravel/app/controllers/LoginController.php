@@ -38,6 +38,46 @@ Class LoginController extends AdminBaseController {
 		return Redirect::back()->withInput();
 	}
 
+	public function getSelfRegister()
+	{
+		$settings = GeneralSettings::first();
+
+		if( ! $settings->self_signup ) {
+			$this->notifyError("Self Signup Not Allowed.");
+			return Redirect::route('user-panel');
+		}
+		return View::make('user.self-registration');
+	}
+
+	public function postSelfRegister()
+	{
+		$input = Input::only('uname','pword','pword_confirmation','status',
+							'fname','lname','email','address','contact');
+		$rules = Config::get('validations.accounts');
+		$rules['uname'][] = 'unique:user_accounts';
+		$rules['pword'][] = 'confirmed';
+
+		$v = Validator::make($input, $rules);
+		$v->setAttributeNames(Config::get('attributes.accounts') );
+
+		if( $v->fails() )
+			return Redirect::back()
+							->withInput()
+							->withErrors($v)
+							;
+
+		$input['plan_type'] 	= PREPAID_PLAN;
+		$input['clear_pword']	= $input['pword'];
+		$input['pword']			= Hash::make($input['pword']);
+		$input['is_admin']		= 0;
+
+		if( Subscriber::create($input) ) {
+			Session::flash('success','succeed');
+		}
+
+		return Redirect::back();
+	}
+
 	public function postInternetLogin()
 	{
 		Session::flash( 'mac', 			Input::get('mac', 				NULL) );
