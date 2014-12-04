@@ -27,7 +27,7 @@ Route::get('json/get-ip-list/{id}',function($subnet_id){
 Route::get('/',[
 	'as'	=>		'welcome.user',
 	function(){
-		return Redirect::route('user-panel');
+		return Redirect::route('user.panel');
 	}]);
 
 Route::get('admin',[
@@ -75,32 +75,34 @@ Route::controller('/login','LoginController',[
 
 
 /**
- * Prefix all the routes to User Panel with /user-panel/
+ * user_routes.php cotains all routes related to user accounts.
  */
-Route::group(['prefix'=>'user-panel','before'=>'isUser'], function(){
+require_once __DIR__ . '/user_routes.php';
+
+// Route::group(['prefix'=>'user-panel','before'=>'isUser'], function(){
 	
 
-	Route::get('/',function(){
-		return Redirect::route('user-panel');
-	});
+// 	Route::get('/',function(){
+// 		return Redirect::route('user-panel');
+// 	});
 
-	Route::get('logout',[
-		'as'	=>		'user.logout',
-		function(){
-			Auth::logout();
-			return Redirect::route('user.login.form');
-		}]);
+// 	Route::get('logout',[
+// 		'as'	=>		'user.logout',
+// 		function(){
+// 			Auth::logout();
+// 			return Redirect::route('user.login.form');
+// 		}]);
 
-	Route::controller('my-account','UserController',[
-			  'getIndex'   =>	'user-panel',
-		  	 'getRecharge' =>	'user.recharge.form',
-		 	'postRecharge' =>	'user.recharge',
-     'getRechargeHistory'  =>	'user.recharge.history',
-	  'getSessionHistory'  =>	'user.session.history',
-	  'getChangePassword'  =>	'user.password.form',
-	  'postChangePassword' =>	'user.changepassword',
-		]);
-});
+// 	Route::controller('my-account','UserController',[
+// 			  'getIndex'   =>	'user-panel',
+// 		  	 'getRecharge' =>	'user.recharge.form',
+// 		 	'postRecharge' =>	'user.recharge',
+//      'getRechargeHistory'  =>	'user.recharge.history',
+// 	  'getSessionHistory'  =>	'user.session.history',
+// 	  'getChangePassword'  =>	'user.password.form',
+// 	  'postChangePassword' =>	'user.changepassword',
+// 		]);
+// });
 
 
 /**
