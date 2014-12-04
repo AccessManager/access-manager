@@ -43,6 +43,21 @@ Route::filter('isUser',function(){
 			return Redirect::guest('login');
 });
 
+Route::filter('isPrepaidUser',function(){
+	if( Auth::guest() || ( Auth::check() && Auth::user()->is_admin && Auth::user()->plan_type != PREPAID_PLAN ) )
+			return Redirect::guest('login');
+});
+
+Route::filter('isFreeUser',function(){
+	if( Auth::guest() || ( Auth::check() && Auth::user()->is_admin && Auth::user()->plan_type != FREE_PLAN ) )
+			return Redirect::guest('login');
+});
+
+Route::filter('isAdvanceUser',function(){
+	if( Auth::guest() || ( Auth::check() && Auth::user()->is_admin && Auth::user()->plan_type != ADVANCEPAID_PLAN ) )
+			return Redirect::guest('login');
+});
+
 Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::guest('login');
