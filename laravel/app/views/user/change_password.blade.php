@@ -8,7 +8,7 @@ Change Password
 	<div class="row">
 	<div class="col-lg-7 col-lg-offset-1">
 
-{{Form::open(['route'=>['user.changepassword'],'class'=>'form-horizontal','role'=>'form'])}}
+{{Form::open(['route'=>['user.change.password'],'class'=>'form-horizontal','role'=>'form'])}}
 {{Form::hidden('user_id', Auth::id())}}
 <fieldset>
   
