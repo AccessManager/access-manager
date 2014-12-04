@@ -13,11 +13,23 @@ Class LoginController extends AdminBaseController {
 					'uname'		=>		Input::get('uname'),
 					'password'	=>		Input::get('pword'),
 					'is_admin'	=>		0
-			]) )
-			return Redirect::intended('user-panel');
-
-		Session::flash('error', "Invalid Credentials");
-		return Redirect::back()->withInput();
+			]) ) {
+			$plan_type = Auth::user()->plan_type;
+			switch( $plan_type ) {
+				case PREPAID_PLAN :
+					return Redirect::intended('prepaid-panel');
+				break;
+				case FREE_PLAN :
+					return Redirect::intended('frinternet-panel');
+				break;
+				case ADVANCEPAID_PLAN :
+					return Redirect::intended('advancepaid-panel');
+				break;
+			}
+		} else {
+			Session::flash('error', "Invalid Credentials");
+			return Redirect::back()->withInput();
+		}
 	}
 
 	public function getAdmin()
