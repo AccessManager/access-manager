@@ -1,26 +1,4 @@
-<?php
-	// echo Request::segment(3);
-	$home = NULL;
-	$recharge = NULL;
-	$r_history = NULL;
-	$s_history = NULL;
 
-	$segment = Request::segment(3);
-	Switch($segment) {
-		case 'index':
-		case NULL :
-			$home = 'active';
-			break;
-		case 'recharge' :
-			$recharge = 'active';
-			break;
-		case 'recharge-history' :
-			$r_history = 'active';
-			break;
-		case 'session-history' :
-			$s_history = 'active';
-	}
-?>
 <html>
 <head>
 	<title>User Panel - Access Manager</title>
@@ -66,29 +44,7 @@
 	</header>
 
 
-	<div class="container">
-		<ul class="nav nav-pills navbar-right">
-		  <li class="{{$home}}">
-		  	{{link_to_route('user-panel', 'Home')}}
-		  </li>
-		  <li class="{{$recharge}}">
-		  	{{link_to_route('user.recharge.form','Recharge')}}
-		  </li>
-		  <li class="{{$r_history}}">
-		  	{{link_to_route('user.recharge.history', 'Recharge History')}}
-		  </li>
-		  <li class="{{$s_history}}">
-			{{link_to_route('user.session.history', 'Session History')}}
-		  </li>
-		</ul>
-	<h2>
-		@yield('user_title')
-	</h2>
-	<hr>
-
-		@yield('user_container')
-
-	</div>
+	@yield('sub_header')
 	<footer>
 		<nav class="navbar navbar-inverse navbar-fixed-bottom">
 			<div class="container">
