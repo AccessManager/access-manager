@@ -15,7 +15,7 @@ Recharge Account
     <div class="row">
 	<div class="col-lg-7 col-lg-offset-1">
 
-{{Form::open(['route'=>['user.recharge'],'class'=>'form-horizontal','role'=>'form'])}}
+{{Form::open(['route'=>['prepaid.recharge'],'class'=>'form-horizontal','role'=>'form'])}}
 
 <fieldset>
 
