@@ -89,6 +89,26 @@ class Recharge extends BaseModel {
 
 			return TRUE;
 	}
+
+	public function online( $user_id, $plan_id )
+	{
+		$input = [
+					'plan_id'		=>		$plan_id,
+					'validity'		=>		1,
+					'validity_unit'	=>		'Day',
+					'count'			=>		1,
+		];
+		try {
+			DB::transaction(function()use($input){
+				$pins = Voucher::generate($input);
+				return self::now(current($pins), $user_id, 'online');	
+			});
+		}
+		catch( Illuminate\Database\Eloquent\ModelNotFoundException $e ) {
+			Notification::error( $e->getMessage() );
+		}
+		
+	}
 }
 
 //end of file Reacharge.php
