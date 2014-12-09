@@ -58,6 +58,11 @@ Route::filter('isAdvanceUser',function(){
 			return Redirect::guest('login');
 });
 
+Route::filter('isRechargeable',function(){
+	if( Auth::guest() || ( Auth::check() && (Auth::user()->is_admin || Auth::user()->plan_type == ADVANCEPAID_PLAN) ) )
+			return Redirect::guest('login');
+});
+
 Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::guest('login');
