@@ -124,4 +124,24 @@ Class SettingsController extends AdminBaseController {
 		}
 	}
 
+	public function getDirecpay()
+	{
+		$direcpay = Direcpay::first();
+		return View::make('admin.settings.payment_gateway.direcpay')
+					->with('direcpay', $direcpay);
+	}
+
+	public function postDirecpay()
+	{
+		$input = Input::all();
+		$settings = Direcpay::find($input['id']);
+		$settings->fill($input);
+		if($settings->save()) {
+			$this->notifySuccess("Settings Updated.");
+		} else {
+			$this->notifyError("Settings could not be updated.");
+		}
+		return Redirect::back();
+	}
+
 }
