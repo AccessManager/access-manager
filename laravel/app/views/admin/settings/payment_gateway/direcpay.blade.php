@@ -44,7 +44,7 @@ if($direcpay->status == 1) {
   <div class="form-group smtp {{$hidden}}">
       {{Form::label('email', 'Encryption Key', ['class'=>'col-lg-4 control-label'])}}
       <div class="col-lg-8">
-        {{Form::text('mid', NULL, ['class'=>'form-control','id'=>'email','placeholder'=>'Your Encryption Key Here.'])}}
+        {{Form::text('enc_key', NULL, ['class'=>'form-control','id'=>'email','placeholder'=>'Your Encryption Key Here.'])}}
       </div>
   </div>
   <div class="form-group smtp {{$hidden}}">
