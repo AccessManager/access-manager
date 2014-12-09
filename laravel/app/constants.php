@@ -3,6 +3,12 @@
 if( ! defined('ACTIVE') )
 	define('ACTIVE',1);
 
+if( ! defined('ENABLED') )
+	define('ENABLED',1);
+
+if( ! defined('DISABLED') )
+	define('DISABLED',0);
+
 if( ! defined('DEACTIVE'))
 	define('DEACTIVE',0);
 
