@@ -18,7 +18,8 @@ class OnlineTransactions extends Migration {
 			$t->increments('id');
 			$t->integer('user_id');
 			$t->string('gw_type');
-			$t->integer('gw_id');
+			$t->integer('gw_id')->unsigned();
+			$t->string('order_id');
 			$t->float('amount');
 			$t->timestamps();
 		});
