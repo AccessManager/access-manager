@@ -19,8 +19,6 @@ class Direcpay extends Migration {
 			$t->bigInteger('dp_refrence_id')->nullable();
 			$t->string('status')->nullable();
 			$t->string('other_details')->nullable();
-			$t->integer('order_id')->unsigned()->nullable();
-			$t->float('amount')->nullable();
 			$t->timestamps();
 		});
 	}
