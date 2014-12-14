@@ -14,7 +14,8 @@
 		"laravel/framework": "4.2.*",
 		"access-manager/am-radius" : "1.*",
 		"edvinaskrucas/notification": "3.*",
-		"s1lentium/iptools":"dev-master"
+		"s1lentium/iptools":"dev-master",
+		"rahulmkhj/direcpay":"*"
 	},
 	"autoload": {
 		"classmap": [

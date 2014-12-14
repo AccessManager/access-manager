@@ -2,11 +2,19 @@
 
 class OnlinePayment extends BaseModel {
 
+	protected $table = 'online_transactions';
+	protected $fillable = ['user_id','gw_type','gw_id','amount',];
+
+	public function gateway()
+	{
+		return $this->morphTo();
+	}
+
 	public static function getActivePaymentGateways()
 	{
 		$enabled_gateways = [];
 
-		$direcpay = Direcpay::first();
+		$direcpay = DB::table('direcpay_settings')->first();
 
 		if( $direcpay->status == ENABLED )
 			$enabled_gateways[] = 'DIRECPAY';
