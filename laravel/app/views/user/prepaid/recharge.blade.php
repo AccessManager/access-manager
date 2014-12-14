@@ -96,8 +96,13 @@ Recharge Account
                                   @endif
                                 </td>
                                 <td>{{$plan->validity}} {{$plan->validity_unit}}</td>
-                                <td><button type="button" class="btn btn-danger btn-xs">
-                                    <i class="fa fa-unlink"></i> Buy Now!</button></td>
+                                <td>
+                                {{Form::open(['route'=>'recharge.select.pg'])}}
+                                {{Form::hidden('plan_id',$plan->id)}}
+                                  <button type="submit" class="btn btn-danger btn-xs">
+                                    <i class="fa fa-unlink"></i> Buy Now!</button>
+                                    {{Form::close()}}
+                                </td>
                             </tr>
                             <?php $i++; ?>
                             @endforeach
