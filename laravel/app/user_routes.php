@@ -95,4 +95,24 @@ Route::group(['prefix'=>'frinternet-panel','before'=>'isFreeUser'], function(){
 		]);
 });
 
+Route::group(['prefix'=>'online-recharge','before'=>'isRechargeable'], function(){
+	
+	Route::post('select-payment-gateway',[
+		'as'		=>		'recharge.select.pg',
+		'uses'		=>		'OnlineRechargeController@selectPaymentGateway',
+		]);
+	Route::post('initiate-online-recharge',[
+		'as'		=>		'initiate.online.recharge',
+		'uses'		=>		'OnlineRechargeController@initiateOnlineRecharge'
+		]);
+	Route::get('online-recharge-success',[
+		'as'		=>		'online.recharge.success',
+		'uses'		=>		'OnlineRechargeController@onlineRechargeSuccess',
+		]);
+	Route::get('online-recharge-failed',[
+		'as'		=>		'online.recharge.failure',
+		'uses'		=>		'OnlineRechargeController@onlineRechargeFailure'
+		]);
+});
+
 //end of file user_routes.php
