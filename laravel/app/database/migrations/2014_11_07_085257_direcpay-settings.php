@@ -18,7 +18,7 @@ class DirecpaySettings extends Migration {
 			$t->increments('id');
 			$t->boolean('status');
 			$t->boolean('sandbox');
-			$t->integer('mid');
+			$t->string('mid');
 			$t->string('enc_key');
 		});
 	}
