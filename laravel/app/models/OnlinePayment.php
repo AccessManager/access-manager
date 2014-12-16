@@ -3,7 +3,7 @@
 class OnlinePayment extends BaseModel {
 
 	protected $table = 'online_transactions';
-	protected $fillable = ['user_id','gw_type','gw_id','amount',];
+	protected $fillable = ['user_id','gw_type','gw_id','amount','order_id',];
 
 	public function gateway()
 	{
