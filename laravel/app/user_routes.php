@@ -105,13 +105,13 @@ Route::group(['prefix'=>'online-recharge','before'=>'isRechargeable'], function(
 		'as'		=>		'initiate.online.recharge',
 		'uses'		=>		'OnlineRechargeController@initiateOnlineRecharge'
 		]);
-	Route::get('online-recharge-success',[
-		'as'		=>		'online.recharge.success',
-		'uses'		=>		'OnlineRechargeController@onlineRechargeSuccess',
+	Route::post('online-recharge-direcpay-success',[
+		'as'		=>		'direcpay.recharge.success',
+		'uses'		=>		'DirecpayController@rechargeSuccess',
 		]);
-	Route::get('online-recharge-failed',[
-		'as'		=>		'online.recharge.failure',
-		'uses'		=>		'OnlineRechargeController@onlineRechargeFailure'
+	Route::post('online-recharge-direcpay-failed',[
+		'as'		=>		'direcpay.recharge.failure',
+		'uses'		=>		'DirecpayController@rechargeFailure'
 		]);
 });
 
