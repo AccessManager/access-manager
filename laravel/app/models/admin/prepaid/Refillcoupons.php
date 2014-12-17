@@ -51,7 +51,8 @@ class Refillcoupons extends BaseModel {
 
 	public static function now($pin, $uid, $method='pin')
 	{
-		$coupon = self::where('pin',$pin)->firstOrFail();
+		$coupon = self::where('pin',$pin)->first();
+		if( $coupon == NULL )	throw new Exception("Invalid PIN.");
 		if( $coupon->user_id != NULL ) {
 			$this->notifyError("voucher already applied.");
 		}
