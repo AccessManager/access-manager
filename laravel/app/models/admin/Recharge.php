@@ -90,7 +90,7 @@ class Recharge extends BaseModel {
 			return TRUE;
 	}
 
-	public function online( $user_id, $plan_id )
+	public static function online( $user_id, $plan_id )
 	{
 		$input = [
 					'plan_id'		=>		$plan_id,
@@ -99,7 +99,7 @@ class Recharge extends BaseModel {
 					'count'			=>		1,
 		];
 		try {
-			DB::transaction(function()use($input){
+			DB::transaction(function()use($input, $user_id){
 				$pins = Voucher::generate($input);
 				return self::now(current($pins), $user_id, 'online');	
 			});
