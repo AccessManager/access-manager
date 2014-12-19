@@ -40,16 +40,18 @@ Refill Quota
     <div class="row">
                 <div class="col-lg-7 col-lg-offset-1">
 
-{{Form::open(['route'=>['prepaid.recharge'],'class'=>'form-horizontal','role'=>'form'])}}
+{{Form::open(['route'=>['recharge.select.pg'],'class'=>'form-horizontal','role'=>'form'])}}
+{{Form::hidden('have_data',1)}}
+{{Form::hidden('type','refill')}}
 <fieldset>
 
   <div class="form-group">
-      {{Form::label('pin', 'How Much', ['class'=>'col-lg-4 control-label'])}}
+      {{Form::label('value', 'How Much', ['class'=>'col-lg-4 control-label'])}}
       <div class="col-lg-6">
-        {{Form::text('pin', NULL, ['class'=>'form-control','id'=>'pin','placeholder'=>'Enter number of GBs'])}}
+        {{Form::text('data_limit', NULL, ['class'=>'form-control','id'=>'value','placeholder'=>'Enter number of GBs'])}}
       </div>
       <div class="col-lg-2">
-        {{Form::select('type',['gb'=>'GB'],NULL,['class'=>'form-control'])}}
+        {{Form::select('data_unit',['GB'=>'GB'],NULL,['class'=>'form-control'])}}
       </div>
   </div>
     
