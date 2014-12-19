@@ -25,24 +25,6 @@ Recharge Account
       	{{Form::text('pin', NULL, ['class'=>'form-control','id'=>'pin'])}}
       </div>
   </div>
-  <!-- <div class="form-group">
-  <div class="col-lg-3 col-lg-offset-4">
-     <div class="radio">
-      <label for="prepaid">
-        <input type="radio" name='voucher_type' id='prepaid' value='prepaid'>
-        Prepaid Voucher
-      </label>
-     </div> 
-    </div>
-    <div class="col-lg-4">
-     <div class="radio">
-      <label for="refill">
-        <input type="radio" name='voucher_type' id='refill' value='refill'>
-        Refill Coupon
-      </label>
-     </div> 
-    </div>
-  </div> -->
     
 <div class="form-group">
       <div class="col-lg-10 col-lg-offset-6">
@@ -99,6 +81,7 @@ Recharge Account
                                 <td>
                                 {{Form::open(['route'=>'recharge.select.pg'])}}
                                 {{Form::hidden('plan_id',$plan->id)}}
+                                {{Form::hidden('type','recharge')}}
                                   <button type="submit" class="btn btn-danger btn-xs">
                                     <i class="fa fa-unlink"></i> Buy Now!</button>
                                     {{Form::close()}}
