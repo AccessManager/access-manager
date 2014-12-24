@@ -6,8 +6,12 @@ class PrepaidUserController extends UserBaseController {
 
 	public function dashboard()
 	{
+		$subscriber = Subscriber::find(Auth::id());
+		$plan = Subscriber::getActiveServices($subscriber);
+
 		return View::make('user.prepaid.dashboard')
-					->with('profile', Auth::user());
+					->with('profile', Auth::user())
+					->with('plan', $plan);
 	}
 
 	public function getRecharge()
@@ -29,9 +33,11 @@ class PrepaidUserController extends UserBaseController {
 			switch($voucher_type) {
 				case 'prepaid' :
 					Recharge::viaPin($pin, Auth::id() );
+					$this->notifySuccess('Recharge Successful.');
 				break;
 				case 'refill' :
 					Refillcoupons::viaPin($pin, Auth::id() );
+					$this->notifySuccess('Refill Applied.');
 				break;
 			}
 			return Redirect::route(self::HOME);
