@@ -17,19 +17,12 @@ class RefillController extends AdminBaseController {
 
 	public function postGenerate()
 	{
-		$count = Input::get('count', NULL);
-		$input = Input::except('count');
-		
-		$input['expires_on'] = $this->_makeExpiry($input['validity'], $input['validity_unit']);
-
-		for( $i = 0; $i < $count; $i++ ) {
-			$input['pin'] = $this->_generatePin();
-			if ( ! Refillcoupons::create($input) ) {
-				$this->notifyError('Failed to generate one or more vouchers.');
-				return Redirect::route(self::HOME);
-			}
+		if( $pins = Refillcoupons::generate( Input::all() ) ) {
+			$count = count($pins);
+			$this->notifySuccess("Generated $count Voucher(s).");
+		} else {
+			$this->notifyError("Voucher Generation Failed.");
 		}
-		$this->notifySuccess("Successfully generated $count Voucher(s).");
 		return Redirect::route(self::HOME);
 	}
 
