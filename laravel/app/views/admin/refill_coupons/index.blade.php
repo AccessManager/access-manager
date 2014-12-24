@@ -65,7 +65,7 @@
                                 <td>{{date("d-M-y", strtotime($voucher->expires_on))}}</td>
                                 <td>{{($voucher->uname) ? $voucher->uname : NULL}}</td>
                                 <td>
-                                    {{strtotime($voucher->updated_at) == strtotime($voucher->created_at) ? 'Unused' : date('d-M-y',strtotime($voucher->updated_at))}}
+                                    {{$voucher->uname == NULL ? 'Unused' : date('d-M-y',strtotime($voucher->updated_at))}}
                                 </td>
                         </tr>
                         <?php $i++; ?>
