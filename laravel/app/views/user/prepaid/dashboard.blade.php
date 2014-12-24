@@ -32,21 +32,55 @@
 				<h4>
 					Service Plan
 				</h4>
+
 			</div>
-			<div class="panel-body"></div>
+			<div class="panel-body">
+			@if( ! is_null($plan))
+				<h3>
+					{{$plan->plan_name}}
+				</h3>
+				@if($plan->plan_type == LIMITED )
+				<table class='table'>
+				<tr>
+					<th>Time Bal</th>
+					<th>Data Bal</th>
+				</tr>
+					<tr>
+						<td>
+							@if($plan->limit_type == TIME_LIMIT || $plan->limit_type == BOTH_LIMITS)
+								{{formatTime($plan->time_limit)}}
+							@else
+								N/A
+							@endif
+						</td>
+						<td>
+							@if($plan->limit_type == DATA_LIMIT || $plan->limit_type == BOTH_LIMITS)
+								{{formatBytes($plan->data_limit)}}
+							@else
+							@endif
+						</td>
+					</tr>
+				</table>
+				@endif
+			@else
+				<h3>
+					Account Not Recharged
+				</h3>
+			@endif
+			</div>
 		</div>
+		@if( ! is_null($plan))
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4>Quota</h4>
+				<h4>Service Expiry</h4>
 			</div>
-			<div class="panel-body"></div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4>Account Expiry</h4>
+			<div class="panel-body">
+					<h5>
+						{{$plan->expiration}}
+					</h5>
 			</div>
-			<div class="panel-body"></div>
 		</div>
+		@endif
 	</div>
 </div>
 
