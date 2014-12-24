@@ -20,15 +20,11 @@ class OnlineRechargeController extends UserBaseController {
 	{
 		$gw = Input::get('gateway');
 		$post_data = Session::get('post_data');
-		$plan = Plan::findOrFail($post_data['plan_id']);
+
 		switch($gw) {
 			case 'DIRECPAY' :
 			$dp = new DirecpayController;
-			return $dp->processDirecpay($plan->price,[
-															'type'	=>'recharge',
-														'plan_name'	=>$plan->plan_name,
-														  'plan_id'	=>$plan->id
-														]);
+			return $dp->processDirecpay( $post_data );
 			break;
 
 		}
