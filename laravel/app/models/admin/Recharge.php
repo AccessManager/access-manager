@@ -20,7 +20,6 @@ class Recharge extends BaseModel {
 		$temp['validity_unit'] = 'days';
 			  $temp['user_id'] = $input['user_id'];
 
-		try{
 			DB::transaction(function() use($temp) {
 				if ( ! $pins = Voucher::generate($temp) ) {
 					throw new Exception("Voucher Generation Failed.");
@@ -29,30 +28,16 @@ class Recharge extends BaseModel {
 					throw new Exception("Failed to recharge account.");
 				}
 			});
-			Notification::success("Account Successfully Recharged");
-		}
-		catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-			Notification::error($e->getMessage());
-		}
-		catch(Exception $e) {
-			Notification::error($e->getMessage());
-		}
 	}
 
 	public static function viaPin($pin, $uid)
 	{
-		try{
+			$voucher = Voucher::where('pin',$pin)->first();
+			
+			if( $voucher->user_id != NULL || ! $voucher->user_id )	throw new Exception('Invalid/Used PIN');
 			DB::transaction(function() use($pin, $uid){
 				self::now($pin, $uid);
 			});
-			Notification::success("Account Successfully Recharged.");
-		}
-		catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-			Notification::error($e->getMessage());
-		}
-		catch(Exception $e) {
-			Notification::error($e->getMessage());
-		}
 	}
 
 	public static function now($pin, $uid, $method = 'pin')
@@ -61,7 +46,6 @@ class Recharge extends BaseModel {
 
 		$rc['voucher_id'] = $voucher->id;
 		$rc['recharged_on'] = date('Y-m-d H:i:s');
-		// $rc['plan_type'] = $voucher->plan_type;
 		$rc['aq_invocked'] = 0;
 		$rc['expiration'] = AccessManager::makeExpiry($voucher->validity, $voucher->validity_unit, 'd M Y H:i');
 
