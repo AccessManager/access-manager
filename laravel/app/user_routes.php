@@ -77,6 +77,9 @@ Route::group(['prefix'=>'prepaid-panel','before'=>'isPrepaidUser'], function(){
 
 Route::group(['prefix'=>'advancepaid-panel','before'=>'isAdvanceUser'], function(){
 
+	Route::get('/',function(){
+		return Redirect::route('advancepaid.dashboard');
+	});
 	Route::get('dashboard',[
 		'as'		=>		'advancepaid.dashboard',
 		'uses'		=>		'AdvanceUserController@dashboard',
@@ -89,9 +92,21 @@ Route::group(['prefix'=>'advancepaid-panel','before'=>'isAdvanceUser'], function
 
 Route::group(['prefix'=>'frinternet-panel','before'=>'isFreeUser'], function(){
 
-	Route::get('dashbord',[
-		'as'	=>		'free.dashboard',
+	Route::get('dashboard',[
+		'as'	=>		'frinternet.dashboard',
 		'uses'	=>		'FreeUserController@dashboard',
+		]);
+	Route::get('refill',[
+		'as'	=>		'frinternet.refill.form',
+		'uses'	=>		'FreeUserController@getRefill',
+		]);
+	Route::post('refill',[
+		'as'	=>		'frinternet.refill',
+		'uses'	=>		'FreeUserController@postRefill',
+		]);
+	Route::get('session-history',[
+		'as'	=>		'frinternet.session.history',
+		'uses'	=>		'FreeUserController@sessionHistory',
 		]);
 });
 
@@ -105,13 +120,13 @@ Route::group(['prefix'=>'online-recharge','before'=>'isRechargeable'], function(
 		'as'		=>		'initiate.online.recharge',
 		'uses'		=>		'OnlineRechargeController@initiateOnlineRecharge'
 		]);
-	Route::post('online-recharge-direcpay-success',[
-		'as'		=>		'direcpay.recharge.success',
-		'uses'		=>		'DirecpayController@rechargeSuccess',
+	Route::post('direcpay-prepaid-response',[
+		'as'		=>		'direcpay.prepaid.response',
+		'uses'		=>		'DirecpayController@prepaidResponse',
 		]);
-	Route::post('online-recharge-direcpay-failed',[
-		'as'		=>		'direcpay.recharge.failure',
-		'uses'		=>		'DirecpayController@rechargeFailure'
+	Route::post('direcpay-frinternet-response',[
+		'as'		=>		'direcpay.frinternet.response',
+		'uses'		=>		'DirecpayController@frinternetResponse'
 		]);
 });
 
