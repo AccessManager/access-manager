@@ -16,6 +16,28 @@ class Refillcoupons extends BaseModel {
 						->paginate(10);
 	}
 
+	public static function generate( $postData )
+	{
+		$postData['expires_on'] = AccessManager::makeExpiry($postData['validity'], $postData['validity_unit']);
+		return DB::transaction(function()use($postData){
+			for( $i = 0; $i < $postData['count']; $i++ ) {
+				$postData['pin'] = self::_generatePin();
+				if( ! $coupon = static::create($postData) )	throw new Exception("Voucher Creation Failed.");
+				$pins[] = $coupon->pin;
+			}
+			return $pins;
+		});
+	}
+
+	private static function _generatePin()
+	{
+		do {
+			$pin = mt_rand(1111111,99999999999);
+			$exists = static::where('pin', $pin)->count();
+		} while($exists);
+		return $pin;
+	}
+
 	public static function variables($ids)
 	{
 		return DB::table('refill_coupons as c')
@@ -29,36 +51,43 @@ class Refillcoupons extends BaseModel {
 
 	public static function viaPin($pin, $uid)
 	{
-		try {
 			DB::transaction(function() use($pin, $uid){
-				Refillcoupons::now($pin, $uid);
-				$coupon = Refillcoupons::where('pin',$pin)
+				if( ! Refillcoupons::now($pin, $uid) )	throw new Exception('Recharge Failed.');
+				$updateCount = Refillcoupons::where('pin',$pin)
 									->update([
 											'user_id'	=>		$uid,
 										]);
+				if( ! $updateCount )	throw new Exception('Voucher Updation Failed.');
 			});
-			Notification::success("Refill coupon successfully applied.");
-		}
-		catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-			
-			Notification::error($e->getMessage());
-		}
-		catch(Excepion $e) {
-			Notification::error($e->getMessage());
-		}
+	}
 
+	public static function refillOnline($uid, $data)
+	{
+		DB::transaction(function()use($uid, $data){
+			$temp = [
+						'validity'	=>	1,
+					'validity_unit'	=>	'Days',
+							'count'	=>	1,
+			];
+			$data = array_merge($data, $temp);
+
+			if( ! $pins = self::generate($data) )	throw new Exception('Refill Failed. Phase:1');
+			$pin = current($pins);
+			if( ! self::now( $pin, $uid, 'online') )	throw new Exception("Refill Failed. Phase:2");
+			if( ! Refillcoupons::where('pin',$pin)->update(['user_id'=>$uid]) )	throw new Exception('Refill Failed. Phase:3');
+		});
 	}
 
 	public static function now($pin, $uid, $method='pin')
 	{
 		$coupon = self::where('pin',$pin)->first();
 		if( $coupon == NULL )	throw new Exception("Invalid PIN.");
-		if( $coupon->user_id != NULL ) {
-			$this->notifyError("voucher already applied.");
-		}
+		if( $coupon->user_id != NULL )	throw new Exception('Invalid/Used Voucher.');
+			
 		$subscriber = Subscriber::find($uid);
 
 		switch($subscriber->plan_type) {
+
 			case PREPAID_PLAN :
 				$recharge = DB::table('user_recharges as r')
 							->where('r.user_id', $uid)
@@ -94,6 +123,7 @@ class Refillcoupons extends BaseModel {
 	public static function refillPrepaid($coupon, $recharge)
 	{
 		$limit = VoucherLimit::findOrFail($recharge->limit_id);
+		$balance = Recharge::findOrFail($recharge->id);
 
 		if( ( $coupon->have_time && $coupon->have_data ) && $limit->limit_type != BOTH_LIMITS )
 			throw new Exception("Coupon having both Time and Data can only be applied to account having both limits.");
@@ -104,20 +134,22 @@ class Refillcoupons extends BaseModel {
 
 		if( $coupon->have_time && ($limit->limit_type == TIME_LIMIT || $limit->limit_type == BOTH_LIMITS )) {
 			if($limit->time_limit >= 0 ) {
-				$limit->increment('time_limit', $coupon->time_limit * constant($coupon->time_unit));
+				$balance->increment('time_limit', $coupon->time_limit * constant($coupon->time_unit));
 			} else {
-				$limit->time_limit = $coupon->time_limit * constant($coupon->time_unit);
-				$limit->save();
+				$balance->time_limit = $coupon->time_limit * constant($coupon->time_unit);
+				$balance->save();
 			}
+			return TRUE;
 		}
 
 		if( $coupon->have_data && ($limit->limit_type == DATA_LIMIT || $limit->limit_type == BOTH_LIMITS )) {
 			if( $limit->data_limit >= 0 ) {
-				$limit->increment('data_limit', $coupon->data_limit * constant($coupon->data_unit));
+				$balance->increment('data_limit', $coupon->data_limit * constant($coupon->data_unit));
 			} else {
-				$limit->data_limit = $coupon->data_limit * constant($coupon->data_unit);
-				$limit->save();
+				$balance->data_limit = $coupon->data_limit * constant($coupon->data_unit);
+				$balance->save();
 			}
+			return TRUE;
 		}
 	}
 
@@ -125,27 +157,28 @@ class Refillcoupons extends BaseModel {
 	{
 		if( ( $coupon->have_time && $coupon->have_data ) && $balance->limit_type != BOTH_LIMITS )
 			throw new Exception("Coupon having both Time and Data can only be applied to account having both limits.");
-		if( ( $coupon->have_time && ! $coupon->have_data ) && $balance->limit_type != TIME_LIMIT )
-			throw new Exception("Time Balance coupons can only be applied to accounts with Time Limit.");
-		if( ( $coupon->have_data && ! $coupon->have_time ) && $balance->limit_type != DATA_LIMIT )
-			throw new Exception("Data Balance coupons can only be applied to account with Data Limit");
 
 		if( $coupon->have_time && ($balance->limit_type == TIME_LIMIT || $balance->limit_type == BOTH_LIMITS )) {
 			if( $balance->time_balance >= 0 ) {
-				$balance->increment('time_balance', $coupon->time_balance * constant($coupon->time_unit));
+				$newTime = $coupon->time_balance * constant($coupon->time_unit);
+				if( ! $balance->increment('time_balance', $newTime) ) throw new Exception('Could not increment Time');
+				return TRUE;
 			} else {
 				$balance->time_balance = $coupon->time_limit * constant($coupon->time_unit);
-				$balance->save();
+				if( ! $balance->save() ) throw new Exception('Could not update Time');
+				return TRUE;
 			}
 		}
 
 		if( $coupon->have_data && ($balance->limit_type == DATA_LIMIT || $balance->limit_type == BOTH_LIMITS )) {
 			if( $balance->data_balance >= 0 ) {
 				$newBalance = $coupon->data_limit * constant($coupon->data_unit);
-				$balance->increment('data_balance', $newBalance );
+				if( ! $balance->increment('data_balance', $newBalance ) ) throw new Exception('Could not increment data.');
+				return TRUE;
 			} else {
 				$balance->data_balance = $coupon->data_limit * constant($coupon->data_unit);
-				$balance->save();
+				if( ! $balance->save() ) throw new Exception('Could not update Data.');
+				return TRUE;
 			}
 		}
 	}
