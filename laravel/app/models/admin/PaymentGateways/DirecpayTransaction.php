@@ -11,13 +11,29 @@ class DirecpayTransaction extends BaseModel {
 		return $this->morphMany('OnlinePayment','gw');
 	}
 
-	public static function initiate( $user_id, $amount, Array $other_details )
+	public static function initiate( $user_id, Array $other_details )
 	{
-		return DB::transaction(function()use( $user_id, $amount, $other_details ){
+		return DB::transaction(function()use( $user_id, $other_details ){
+			$details = [];
+			switch($other_details['type']) {
+				case 'recharge':
+				$details = [
+						'type'	=>		'recharge',
+						'plan_id'	=>	$other_details['plan_id'],
+						'plan_name'	=>	$other_details['plan_name'],
+				];
+				break;
+				case 'refill':
+				$details = [
+						'type'		=>	'refill',
+						'value'		=>	$other_details['value'],
+						'unit'		=>	$other_details['unit'],
+				];
+			}
 
 			$dp_transaction = new self([
 												'status'	=>		'Initiated',
-										 'other_details'	=>		http_build_query($other_details),
+										 'other_details'	=>		http_build_query($details),
 										]);
 			if( ! $dp_transaction->save() )	throw new Exception('Could not initiate transaction. Failed: Phase 1');
 
@@ -25,20 +41,23 @@ class DirecpayTransaction extends BaseModel {
 				$uid = uniqid();
 				$exists = OnlinePayment::where('order_id',$uid)->count();
 			} while( $exists );
-			$transaction = new OnlinePayment([
-												'user_id'	=>	$user_id,
-												'gw_type'	=>	'DirecpayTransaction',
-												  'gw_id'	=>	$dp_transaction->id,
-											   'order_id'	=>	$uid,
-												 'amount'	=>	$amount
-											]);
+
+			$payment = [
+						'user_id'	=>	$user_id,
+						'gw_type'	=>	'DirecpayTransaction',
+						  'gw_id'	=>	$dp_transaction->id,
+					   'order_id'	=>	$uid,
+						 'amount'	=>	$other_details['amount'],
+					];
+
+			$transaction = new OnlinePayment($payment);
+
 				if( ! $transaction->save() )	throw new Exception('Could not initiate transaction. Failed: Phase 2');
-				
 				return $transaction->order_id;
 			});
 	}
 
-	public static function succeed(DirecpayResponse $dp)
+	public static function updateResponse(DirecpayResponse $dp)
 	{
 		$response = $dp->getResponse();
 
