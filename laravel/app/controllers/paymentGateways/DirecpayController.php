@@ -1,27 +1,32 @@
 <?php
+use RAHULMKHJ\PaymentGateways\Direcpay\Direcpay as DP;
 
 class DirecpayController extends BaseController {
 
-		public function processDirecpay( $amount, Array $details )
+	private $postData;
+
+	public function processDirecpay($postData)
 	{
-		$user_id = Auth::id();
+
+		$this->postData = $postData;
 		try {
-			$trans_id = DirecpayTransaction::initiate( $user_id, $amount, $details );
+			$details = $this->_makeDetails();
+			
+			$order_id = DirecpayTransaction::initiate( Auth::id(), $details );
+			$user = Auth::user();
+
+			$dp = new DP;
 			$settings = DB::table('direcpay_settings')->first();
-			$user = Subscriber::find($user_id);
-
-			$dp = new RAHULMKHJ\PaymentGateways\Direcpay\Direcpay;
-
 			if( $settings->sandbox == ENABLED ) {
 				$dp->enableSandbox();
 			} else {
 				$dp->setMerchant( $settings->mid, $settings->enc_key );
 			}
 			$dp->setRequestParameters([
-							'amount'	=>		$amount,
-							'orderNo'	=>		$trans_id,
-						'successUrl'	=>		route('direcpay.recharge.success'),
-						'failureUrl'	=>		route('direcpay.recharge.failure'),
+							'amount'	=>		$details['amount'],
+						   'orderNo'	=>		$order_id,
+						'successUrl'	=>		$details['successUrl'],
+						'failureUrl'	=>		$details['failureUrl'],
 				]);
 			$dp->setBillingDetails([
 						'name'		=>		$user->fname . " " . $user->lname,
@@ -31,10 +36,9 @@ class DirecpayController extends BaseController {
 						'pinCode'	=>		173205,
 						'country'	=>		'IN',
 						'mobileNo'	=>		$user->contact,
-						// 'phoneNo1'	=>		$user->contact,
 						'emailId'	=>		$user->email,
 				]);
-			$dp->setOtherDetails($details);
+			$dp->setOtherDetails( $this->postData );
 
 			$dp->buildEncryptedStrings(TRUE);
 			$dp->autoSubmit();
@@ -46,30 +50,106 @@ class DirecpayController extends BaseController {
 		}
 	}
 
-	public function rechargeSuccess()
+	private function _makeDetails()
 	{
-		$dp = RAHULMKHJ\PaymentGateways\Direcpay\Direcpay::response(Input::all());
-		if( $dp->txnSucceed() ) {
-			$details = $dp->getDetails();
+		$details = [];
+		switch($this->postData['type']) {
+			case 'recharge':
+				$details = $this->_makeRechargeDetails();
+			break;
+			case 'refill':
+				$details = $this->_makeRefillDetails();
+			break;
+		}
+		return array_merge( $details, $this->_makeReturnUrl() );
+	}
 
-			DirecpayTransaction::succeed($dp);
+	private function _makeRechargeDetails()
+	{
+		$plan = Plan::find($this->postData['plan_id']);
+			return [
+				 	'type'		=>		'recharge',
+			   'plan_name'		=>		$plan->name,
+			     'plan_id'		=>		$plan->id,
+			     'amount'		=>		$plan->price,
+			];
+
+	}
+
+	private function _makeRefillDetails()
+	{
+		return [
+				  'type'	=>	'refill',
+				 'value'	=>	$this->postData['data_limit'],
+				  'unit'	=>	$this->postData['data_unit'],
+				'amount'	=>	$this->postData['data_limit']*50,
+			];	
+	}
+
+	private function _makeReturnUrl()
+	{
+		switch( Auth::user()->plan_type ) {
+			case PREPAID_PLAN :
+			return [
+					'successUrl'	=>	route('direcpay.prepaid.response'),
+					'failureUrl'	=>	route('direcpay.prepaid.response'),
+			];
+			break;
+			case FREE_PLAN:
+			return [
+					'successUrl'	=>	route('direcpay.frinternet.response'),
+					'failureUrl'	=>	route('direcpay.frinternet.response'),
+			];
+			break;
+		}
+	}
+
+	public function prepaidResponse()
+	{
+		$response = DP::response(Input::all());
+		DirecpayTransaction::updateResponse($response);
+		if( $response->txnSucceed() ):
+		$details = $response->getDetails();
+		switch($details['type']) {
+			case 'recharge':
+				Recharge::online(Auth::id(), $details['plan_id']);
+				$this->notifySuccess('Account Recharged.');
+			break;
+			case 'refill':
+			try {
+				Refillcoupons::refillOnline(Auth::id(), $details);
+				$this->notifySuccess('Quota Refilled.');
+			} catch(Exception $e) {
+				$this->notifyError( $e->getMessage() );
+				return Redirect::route('prepaid.dashboard');
+			}
 			
-			Recharge::online(Auth::id(), $details['plan_id']);
-			$this->notifySuccess("Account Recharged.");
-		} else {
-			$this->notifyError("Account RechargeFailed.");
+			break;
 		}
+		else:
+			$this->notifyError('Transaction Failed.');
+		endif;
 		return Redirect::route('prepaid.dashboard');
 	}
 
-	public function rechargeFailure()
+	public function frinternetResponse()
 	{
-		$dp = RAHULMKHJ\PaymentGateways\Direcpay\Direcpay::response(Input::all());
-		
-		if( $dp->txnFailed() ) {
-			$this->notifyError("Transaction Failed. Contact Merchant.");
+		try {
+			$response = DP::response(Input::all());
+			DirecpayTransaction::updateResponse($response);
+			$details = $response->getDetails();
+			if( $response->txnSucceed() ):
+				Refillcoupons::refillOnline(Auth::id(), $details);
+				$this->notifySuccess('Account Refilled.');
+			else:
+				$this->notifyError('Account Refill Failed.');
+			endif;
+			return Redirect::route('frinternet.dashboard');
+		} catch(Exception $e) {
+			$this->notifyError($e->getMessage());
+			return Redirect::route('frinternet.dashboard');
 		}
-		return Redirect::route('prepaid.dashboard');
 	}
+
 }
 //end of file DirecpayController.php
