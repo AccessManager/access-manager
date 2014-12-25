@@ -57,6 +57,10 @@ Class DefaultsSeeder extends Seeder {
 				'status'		=>		0,
 				'sandbox'		=>		0,
 			]);
+		Direcpaysettings::insert([
+				'status'		=>		0,
+				'sandbox'		=>		0,
+			]);
 	}
 
 	private function _seedThemes()
