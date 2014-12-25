@@ -126,7 +126,7 @@ Class SettingsController extends AdminBaseController {
 
 	public function getDirecpay()
 	{
-		$direcpay = Direcpay::first();
+		$direcpay = Direcpaysettings::first();
 		return View::make('admin.settings.payment_gateway.direcpay')
 					->with('direcpay', $direcpay);
 	}
@@ -134,7 +134,7 @@ Class SettingsController extends AdminBaseController {
 	public function postDirecpay()
 	{
 		$input = Input::all();
-		$settings = Direcpay::find($input['id']);
+		$settings = Direcpaysettings::find($input['id']);
 		$settings->fill($input);
 		if($settings->save()) {
 			$this->notifySuccess("Settings Updated.");
