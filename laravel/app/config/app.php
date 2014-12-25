@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'Asia/Kolkata',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -120,6 +120,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Krucas\Notification\NotificationServiceProvider',
+		'Thujohn\Pdf\PdfServiceProvider',
 	),
 
 	/*
@@ -187,6 +188,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Carbon'		  => 'Carbon\Carbon',
 		'Notification' 	  => 'Krucas\Notification\Facades\Notification',
+		'PDF' 			  => 'Thujohn\Pdf\PdfFacade',
 	),
 
 );
