@@ -16,7 +16,7 @@
 			Free Hotspot Management System
 		</p>
 		<p>
-			v2.2
+			v2.4
 		</p>
 	</div>
 	
