@@ -1,7 +1,7 @@
 {
 	"name": "access-manager/access-manager",
 	"description": "The Open Source Hotpsot Management System.",
-	"keywords": ["hotspot management system"],
+	"keywords": ["hotspot management system","mikrotik"],
 	"license": "MIT",
 	"authors" : [
 			{
@@ -15,7 +15,8 @@
 		"access-manager/am-radius" : "1.*",
 		"edvinaskrucas/notification": "3.*",
 		"s1lentium/iptools":"dev-master",
-		"rahulmkhj/direcpay":"*"
+		"rahulmkhj/direcpay":"*",
+		"thujohn/pdf": "*"
 	},
 	"autoload": {
 		"classmap": [
@@ -42,6 +43,7 @@
 		],
 		"post-create-project-cmd": [
 			"php laravel/artisan key:generate",
+			"php artisan config:publish thujohn/pdf",
 			"chmod 777 -R laravel/app/storage"
 		]
 	},
