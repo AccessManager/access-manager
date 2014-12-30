@@ -15,8 +15,7 @@
 		"access-manager/am-radius" : "1.*",
 		"edvinaskrucas/notification": "3.*",
 		"s1lentium/iptools":"dev-master",
-		"rahulmkhj/direcpay":"*",
-		"thujohn/pdf": "*"
+		"rahulmkhj/direcpay":"*"
 	},
 	"autoload": {
 		"classmap": [
