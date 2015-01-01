@@ -42,7 +42,6 @@
 		],
 		"post-create-project-cmd": [
 			"php laravel/artisan key:generate",
-			"php artisan config:publish thujohn/pdf",
 			"chmod 777 -R laravel/app/storage"
 		]
 	},
