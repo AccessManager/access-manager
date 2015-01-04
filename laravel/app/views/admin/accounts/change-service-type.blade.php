@@ -53,6 +53,12 @@
                             {{Form::select('plan_type', [FREE_PLAN => 'FRiNTERNET',ADVANCEPAID_PLAN => "Advance Paid",PREPAID_PLAN => 'Prepaid'], NULL, ['class'=>'form-control'])}}
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="" class='col-lg-4 control-label'>Organisation</label>
+                        <div class="col-lg-8">
+                            {{Form::select('org_id',$orgs,NULL,['class'=>'form-control'])}}
+                        </div>
+                    </div>
                     <div class="form-group {Form::error($errors,'billing_cycle')}} {{Form::error($errors,'billing_cycle')}}">
                       <label for="inputEmail" class="col-lg-4 control-label">Bill Cycle</label>
                       <div class="col-lg-5">
