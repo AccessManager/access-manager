@@ -20,6 +20,10 @@ class Organisations extends Migration {
 			$t->string('address');
 			$t->string('tin');
 		});
+
+		Schema::table('billing_cycles',function(Blueprint $t){
+			$t->integer('org_id')->unsigned();
+		});
 	}
 
 	/**
@@ -30,6 +34,9 @@ class Organisations extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('organisations');
+		Schema::table('billing_cycles',function(Blueprint $t){
+			$t->dropColumn('org_id');
+		});
 	}
 
 }
