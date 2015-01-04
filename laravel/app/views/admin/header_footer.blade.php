@@ -198,6 +198,9 @@ if( $segment == 'settings' ) {
                                     <a href="{{route('setting.general')}}">
                                     Reports</a>
                                 </li>
+                                <li>
+                                    {{link_to_route('org.index','Organisations')}}
+                                </li>
                                 <li class="divider"></li>
                                 <li>
                                     {{link_to_route('system.about','About')}}
