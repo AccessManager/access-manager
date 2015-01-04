@@ -243,8 +243,10 @@ Class AccountsController extends AdminBaseController {
 	public function getChangeServiceType($user_id)
 	{
 		$profile = Subscriber::findOrFail($user_id);
+		$orgs = Organisation::lists('name','id');
 		return View::make("admin.accounts.change-service-type")
-					->with('profile', $profile);
+					->with('profile', $profile)
+					->with('orgs',$orgs);
 	}
 
 	public function postChangeServiceType()
