@@ -266,6 +266,15 @@ Route::controller('settings','SettingsController',[
 			'postThemes'		=>		'setting.themes',
 	]);
 
+Route::controller('organisations','OrganisationsController',[
+			'getIndex'			=>		'org.index',
+			'getAdd'			=>		'org.add.form',
+			'postAdd'			=>		'org.add',
+			'getEdit'			=>		'org.edit.form',
+			'postEdit'			=>		'org.edit',
+			'postDelete'		=>		'org.delete'
+	]);
+
 Route::controller('my-profile','AdminProfileController',[
 			'getEdit'			=>		'admin.profile.edit',
 			'postEdit'			=>		'admin.profile',
