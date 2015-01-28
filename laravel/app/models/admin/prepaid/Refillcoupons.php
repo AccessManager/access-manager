@@ -1,9 +1,11 @@
 <?php
+use AccessManager\Radius\Account\Account as RadiusAccount;
+use AccessManager\Radius\UserAccount as RadiusUserAccount;
 
 class Refillcoupons extends BaseModel {
 
 	protected $table = 'refill_coupons';
-	protected $fillable = ['pin','user_id','expires_on',
+	protected $fillable = ['pin','user_id','expires_on','aq_invocked',
 							'have_data','data_limit','data_unit',
 							'have_time','time_limit','time_unit',];
 
@@ -59,6 +61,7 @@ class Refillcoupons extends BaseModel {
 										]);
 				if( ! $updateCount )	throw new Exception('Voucher Updation Failed.');
 			});
+			return TRUE;
 	}
 
 	public static function refillOnline($uid, $data)
@@ -92,7 +95,9 @@ class Refillcoupons extends BaseModel {
 				$recharge = DB::table('user_recharges as r')
 							->where('r.user_id', $uid)
 							->join('prepaid_vouchers as v','r.voucher_id','=','v.id')
-							->select('r.id','v.plan_type','v.limit_id','r.expiration')
+							->join('user_accounts as u','u.id','=','r.user_id')
+							->leftJoin('voucher_limits as l','v.limit_id','=','l.id')
+							->select('r.id','v.plan_type','v.limit_id','r.expiration','l.aq_access','u.uname')
 							->first();
 				if( is_null($recharge) )	throw new Exception("Cannot refill, account never recharged.");
 				if( strtotime($recharge->expiration) < time() )	
@@ -105,10 +110,13 @@ class Refillcoupons extends BaseModel {
 				break;
 
 			case FREE_PLAN :
-				$balance = Freebalance::where('user_id', $uid)
-								->select('plan_type','limit_type','id',
-									'time_balance','data_balance','expiration')
+				$balance = Freebalance::where('free_balance.user_id', $uid)
+								->join('user_accounts as u','u.id','=','free_balance.user_id')
+								->select('free_balance.plan_type','free_balance.limit_type','free_balance.id','free_balance.aq_access',
+									'free_balance.aq_invocked',
+									'free_balance.time_balance','free_balance.data_balance','free_balance.expiration','u.uname')
 								->first();
+								
 				if( strtotime($balance->expiration) < time() )	
 					throw new Exception(
 						"Cannot refill account, validity expired on: " . date('d-M-y H:i', strtotime($balance->expiration))
@@ -132,6 +140,7 @@ class Refillcoupons extends BaseModel {
 		if( ( $coupon->have_data && ! $coupon->have_time ) && $limit->limit_type != DATA_LIMIT )
 			throw new Exception("Data Balance coupons can only be applied to account with Data Limit");
 
+		$result = FALSE;
 		if( $coupon->have_time && ($limit->limit_type == TIME_LIMIT || $limit->limit_type == BOTH_LIMITS )) {
 			if($limit->time_limit >= 0 ) {
 				$balance->increment('time_limit', $coupon->time_limit * constant($coupon->time_unit));
@@ -139,7 +148,7 @@ class Refillcoupons extends BaseModel {
 				$balance->time_limit = $coupon->time_limit * constant($coupon->time_unit);
 				$balance->save();
 			}
-			return TRUE;
+			$result = TRUE;
 		}
 
 		if( $coupon->have_data && ($limit->limit_type == DATA_LIMIT || $limit->limit_type == BOTH_LIMITS )) {
@@ -149,8 +158,15 @@ class Refillcoupons extends BaseModel {
 				$balance->data_limit = $coupon->data_limit * constant($coupon->data_unit);
 				$balance->save();
 			}
-			return TRUE;
+			$result = TRUE;
 		}
+		if( $result == TRUE && $recharge->aq_access == ALLOWED ) {
+			DB::table('user_recharges')
+				->where(['user_id'=>$recharge->id])
+				->update(['aq_invocked'	=>	0,]);
+				$this->_invokeCoA($recharge->uname);
+		}
+		return $result;
 	}
 
 	public static function refillFree($coupon, $balance)
@@ -158,29 +174,47 @@ class Refillcoupons extends BaseModel {
 		if( ( $coupon->have_time && $coupon->have_data ) && $balance->limit_type != BOTH_LIMITS )
 			throw new Exception("Coupon having both Time and Data can only be applied to account having both limits.");
 
+		$result = FALSE;
 		if( $coupon->have_time && ($balance->limit_type == TIME_LIMIT || $balance->limit_type == BOTH_LIMITS )) {
 			if( $balance->time_balance >= 0 ) {
 				$newTime = $coupon->time_balance * constant($coupon->time_unit);
 				if( ! $balance->increment('time_balance', $newTime) ) throw new Exception('Could not increment Time');
-				return TRUE;
+				$result = TRUE;
 			} else {
 				$balance->time_balance = $coupon->time_limit * constant($coupon->time_unit);
 				if( ! $balance->save() ) throw new Exception('Could not update Time');
-				return TRUE;
+				$result = TRUE;
 			}
 		}
 
 		if( $coupon->have_data && ($balance->limit_type == DATA_LIMIT || $balance->limit_type == BOTH_LIMITS )) {
+
 			if( $balance->data_balance >= 0 ) {
 				$newBalance = $coupon->data_limit * constant($coupon->data_unit);
-				if( ! $balance->increment('data_balance', $newBalance ) ) throw new Exception('Could not increment data.');
-				return TRUE;
+				if( ! $balance->increment('data_balance', $newBalance) ) throw new Exception('Could not increment data.');
+				$result = TRUE;
 			} else {
 				$balance->data_balance = $coupon->data_limit * constant($coupon->data_unit);
 				if( ! $balance->save() ) throw new Exception('Could not update Data.');
-				return TRUE;
+				$result = TRUE;
 			}
 		}
+		if( $result == TRUE && $balance->aq_access == ALLOWED ) {
+				DB::table('free_balance')
+					->where(['id'=>$balance->id])
+					->update(['aq_invocked'=>0]);
+				$this->_invokeCoA($balance->uname);
+		}
+		return $result;
+	}
+
+	private function _invokeCoA($uname)
+	{
+		$user = new RadiusUserAccount($uname);
+				$plan = $user->getActivePlan();
+				$plan->fetchPlanDetails();
+				$account = new RadiusAccount($plan);
+				$account->CoA( TRUE );
 	}
 
 }
