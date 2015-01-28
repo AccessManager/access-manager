@@ -42,7 +42,11 @@ class RefillController extends AdminBaseController {
 	public function postRecharge()
 	{
 		try {
-			Refillcoupons::viaPin(Input::get('pin'), Input::get('user_id'));
+			if( Refillcoupons::viaPin(Input::get('pin'), Input::get('user_id')) ) {
+				$this->notifySuccess('Refill Successful.');
+			} else {
+				$this->notifyError('Refill Failed.');
+			}
 		}
 		catch(Exception $e) {
 			$this->notifyError($e->getMessage());
