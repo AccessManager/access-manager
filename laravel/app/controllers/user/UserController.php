@@ -12,15 +12,19 @@ Class UserController extends UserBaseController {
 
 	public function getChangePassword()
 	{
+		$plan_type = NULL;
 		switch( Auth::user()->plan_type ) {
 			case PREPAID_PLAN :
-				return View::make('user.prepaid.change_password');
+				$plan_type = 'prepaid';
 			break;
 			case FREE_PLAN :
+				$plan_type = 'frinternet';
 			break;
 			case ADVANCEPAID_PLAN :
+				$plan_type = 'advancepaid';
 			break;
 		}
+		return View::make('user.prepaid.change_password',['plan_type'=>$plan_type]);
 	}
 
 	public function postChangePassword()

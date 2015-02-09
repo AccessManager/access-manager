@@ -1,4 +1,4 @@
-@extends('user.prepaid.header_footer')
+@extends('user.' . $plan_type . '.header_footer')
 @section('user_title')
 Change Password
 @stop
