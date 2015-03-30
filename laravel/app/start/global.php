@@ -79,7 +79,6 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
-require app_path().'/constants.php';
 
 /**
  * Register not found function to handle 404.
