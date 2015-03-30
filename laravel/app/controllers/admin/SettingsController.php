@@ -74,7 +74,6 @@ Class SettingsController extends AdminBaseController {
 	public function getSmtp()
 	{
 		$smtp = SmtpSettings::first();
-		// pr($smtp);
 		return View::make('admin.settings.email.smtp')
 						->with('smtp',$smtp);
 	}
@@ -126,7 +125,7 @@ Class SettingsController extends AdminBaseController {
 
 	public function getDirecpay()
 	{
-		$direcpay = Direcpaysettings::first();
+		$direcpay = DirecpaySetting::first();
 		return View::make('admin.settings.payment_gateway.direcpay')
 					->with('direcpay', $direcpay);
 	}
@@ -134,7 +133,7 @@ Class SettingsController extends AdminBaseController {
 	public function postDirecpay()
 	{
 		$input = Input::all();
-		$settings = Direcpaysettings::find($input['id']);
+		$settings = DirecpaySetting::find($input['id']);
 		$settings->fill($input);
 		if($settings->save()) {
 			$this->notifySuccess("Settings Updated.");
@@ -144,4 +143,23 @@ Class SettingsController extends AdminBaseController {
 		return Redirect::back();
 	}
 
+	public function getAdvancepaid()
+	{
+		$ap = APSetting::first();
+		return View::make('admin.settings.ap_settings',['ap'=>$ap]);
+	}
+
+	public function postAdvancepaid()
+	{
+		$ap = APSetting::first();
+		$ap->fill(Input::all());
+		if( $ap->save() ) {
+			$this->notifySuccess('Settings Saved.');
+		} else {
+			$this->notifyError('Failed to save Settings.');
+		}
+		return Redirect::back();
+	}
+
 }
+// end of file SettingsController.php
