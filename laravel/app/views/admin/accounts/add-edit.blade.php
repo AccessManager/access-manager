@@ -15,9 +15,7 @@
         
     </div>
 </div>
-
             <hr />
-
 <div class="row">
 	<div class="col-lg-2"></div>
 	<div class="col-lg-7">
@@ -83,17 +81,10 @@
         {{$errors->first('address',"<span class='help-block'>:message</span>")}}
       </div>
   </div>
-  <!-- <div class="form-group {{Form::error($errors, 'status')}}">
-      <label for="select" class="col-lg-3 control-label">Account Type</label>
-      <div class="col-lg-8">
-        {{Form::select('plan_type', [FREE_PLAN => 'FRiNTERNET', PREPAID_PLAN => 'Prepaid',ADVANCEPAID_PLAN => 'AdvancePaid'], NULL, ['class'=>'form-control'])}}
-        {{$errors->first('plan_type',"<span class='help-block'>:message</span>")}}
-    </div>
-</div> -->
   <div class="form-group {{Form::error($errors, 'status')}}">
       <label for="select" class="col-lg-3 control-label">Account Status</label>
       <div class="col-lg-8">
-        {{Form::select('status', [1=>'Active', 0=>'Deactive'], NULL, ['class'=>'form-control'])}}
+        {{Form::select('status', [ACTIVE => 'Active', DEACTIVE => 'Deactive', TERMINATED => 'Terminated'], NULL, ['class'=>'form-control'])}}
         {{$errors->first('status',"<span class='help-block'>:message</span>")}}
     </div>
 </div>
