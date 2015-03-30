@@ -17,18 +17,39 @@
   @endif
 </ul>
 <div class="row">
-	<div class="col-lg-9">
-		<div class="panel panel-default">
-		  <div class="panel-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h2>{{{$profile->fname}}} {{{$profile->lname}}}
-                    </h2>
-                        
-                </div>
-            </div>
+    <div class="col-lg-12">
+        <div class="tabbable tabs-right">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#profile" data-toggle='tab'>
+                        <i class="fa fa-angle-double-left"></i>
+                        User Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#change-password" data-toggle='tab'>
+                        <i class="fa fa-angle-double-left"></i>
+                        Change Password
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="profile">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h2>{{{$profile->fname}}} {{{$profile->lname}}}
+                                    </h2>
+                                </div>
+                                <div class="col-lg-6">
+                                    <p class="pull-right">
+                                        {{link_to_route('subscriber.edit.form','Update Profile', $profile->id)}}
+                                    </p>
+                                </div>
+                            </div>
             <hr>
-            <div class="row all" id='profile'>
+            <div class="row" id='profile'>
                 <div class="col-lg-6">
                         <div class="row">
                             <div class="col-lg-1">
@@ -111,60 +132,50 @@
                     </blockquote>
                 </div>
             </div> <!-- ends profile row inside panel body -->
-
-            <div class="row all hidden" id='reset-password'>
-                <div class="col-lg-7 col-lg-offset-2">
-
-                    {{Form::open(['route'=>'subscriber.reset.password','class'=>'form-horizontal'])}}
-                    {{Form::hidden('id', $profile->id)}}
-                    <div class="form-group">
-                        <label for="" class="col-lg-4 control-label">
-                            New Password
-                        </label>
-                        <div class="col-lg-8">
-                            {{Form::password('npword', ['class'=>'form-control'])}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="" class="col-lg-4 control-label">
-                            Confirm Password
-                        </label>
-                        <div class="col-lg-8">
-                            {{Form::password('cpword', ['class'=>'form-control'])}}
+                </div>
+                <div class="tab-pane" id='change-password'>
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="row" id='reset-password'>
+                                <div class="col-lg-12">
+                                    <h2>Change Password</h2>
+                                    <hr>
+                                    {{Form::open(['route'=>'subscriber.reset.password','class'=>'form-horizontal'])}}
+                                    {{Form::hidden('id', $profile->id)}}
+                                    <div class="form-group">
+                                        <label for="" class="col-lg-4 control-label">
+                                            New Password
+                                        </label>
+                                        <div class="col-lg-4">
+                                            {{Form::password('npword', ['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-lg-4 control-label">
+                                            Confirm Password
+                                        </label>
+                                        <div class="col-lg-4">
+                                            {{Form::password('cpword', ['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                        <div class="form-group">
+                                          <div class="col-lg-10 col-lg-offset-4">
+                                                {{Form::buttons()}}
+                                          </div>
+                                        </div>
+                                    {{Form::close()}}
+                                </div>
+                            </div> <!-- ends reset password row inside panel body -->
                         </div>
                     </div>
-                        <div class="form-group">
-                          <div class="col-lg-10 col-lg-offset-4">
-                                {{Form::buttons()}}
-                          </div>
-                        </div>
-                    {{Form::close()}}
                 </div>
-            </div> <!-- ends reset password row inside panel body -->
-
-            <!-- <div class="row all hidden" id='refill'>
-                <div class="col-lg-12">
-                    <h1>Refill (Manually)</h1>
-                </div>
-            </div> --> <!-- ends refill row inside panel body -->
-
-		  </div> <!-- ends panel body -->
-		</div> <!-- ends panel-default -->
-	</div>
-        <div class="col-lg-3">
-        	<ul class="nav nav-pills nav-stacked" style="max-width: 300px;">
-        		<li class="profile-nav active" target='profile'><a href='#'>
-                    <i class="fa fa-angle-double-left"></i>
-                    User Profile</a></li>
-			  <li class="profile-nav" target='reset-password'><a href='#'>
-                <i class="fa fa-angle-double-left"></i>
-                Reset Password</a></li>
-			  <!-- <li class='profile-nav' target='refill'><a href='#'>
-                <i class="fa fa-angle-double-left"></i>
-                Refill (Manually)</a></li> -->
-			</ul>
+            </div>
         </div>
+    </div>
 </div>
+<hr>
 
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
   <li class="active"><a href="#session" data-toggle="tab">Recent Sessions</a></li>
