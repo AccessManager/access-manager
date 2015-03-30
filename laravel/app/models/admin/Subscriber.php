@@ -114,7 +114,7 @@ Class Subscriber extends BaseModel {
 			case FREE_PLAN :
 			return Freebalance::where('user_id', $profile->id)
 								->select('plan_type','limit_type','time_balance as time_limit',
-									'data_balance as data_limit')
+									'data_balance as data_limit','expiration','last_reset_on')
 								->first();
 			break;
 			case ADVANCEPAID_PLAN :
