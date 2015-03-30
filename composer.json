@@ -10,12 +10,16 @@
 			}
 		],
 	"require": {
-		"php" : ">=5.4",
-		"laravel/framework": "4.2.*",
-		"access-manager/am-radius" : "1.*",
-		"edvinaskrucas/notification": "3.*",
-		"s1lentium/iptools":"dev-master",
-		"rahulmkhj/direcpay":"*"
+							   "php" : ">=5.4",
+				 "laravel/framework" : "4.2.*",
+		 "access-manager/am-radius"  : "1.*",
+		"access-manager/am-invoices" : "1.*",
+	   "access-manager/am-constants" : "0.*",
+	   	 "access-manager/am-helpers" : "*",
+		"edvinaskrucas/notification" : "3.*",
+				 "s1lentium/iptools" : "dev-master",
+			    "rahulmkhj/direcpay" : "*",
+						 "itbz/fpdf" : "1.7.*"
 	},
 	"autoload": {
 		"classmap": [
@@ -26,9 +30,6 @@
 			"laravel/app/database/seeds",
 			"laravel/app/tests/TestCase.php",
 			"laravel/app/libraries"
-		],
-		"files"	:[
-			"laravel/app/helpers.php"
 		]
 	},
 	"scripts": {
