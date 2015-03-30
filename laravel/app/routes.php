@@ -22,7 +22,7 @@ Route::get('json/get-ip-list/{id}',function($subnet_id){
 	return Response::json($ips);
 });
 
-
+Route::get('send-email','SystemController@sendEmail');
 
 Route::get('/',[
 	'as'	=>		'welcome.user',
@@ -177,6 +177,18 @@ Route::controller('subscribers', 'AccountsController',[
 			'postChangeServiceType'	=>	'subscriber.servicetype',
 			'postSearch'		=>		'subscriber.search',
 			'postDisconnect'	=>		'subscriber.disconnect',
+			'postAPSettings'	=>		'subscriber.ap.settings',
+			'getTransactions'	=>		'subscriber.ap.transactions',
+			'postAddTransaction'=>		'subscriber.ap.addTransaction',
+	]);
+
+Route::controller('products', 'UserProductsController',[
+			'postAddRecurringProduct'		=>		'subscriber.product.add.recurring',
+			'postAddNonRecurringProduct'	=>		'subscriber.product.add.nonrecurring',
+			'postEditRecurringProduct'		=>		'product.edit.recurring',
+			'postEditNonRecurringProduct'	=>		'product.edit.nonrecurring',
+			'postDeleteRecurringProduct'	=>		'product.delete.recurring',
+			'postDeleteNonRecurringProduct'	=>		'product.delete.nonrecurring',
 	]);
 
 Route::controller('prepaid-vouchers','VouchersController',[
@@ -264,6 +276,9 @@ Route::controller('settings','SettingsController',[
 			'postDirecpay'		=>		'setting.direcpay',
 			'getThemes'			=>		'setting.themes.form',
 			'postThemes'		=>		'setting.themes',
+			'getAdvancepaid'	=>		'setting.advancepaid.form',
+			'postAdvancepaid'	=>		'setting.advancepaid'
+
 	]);
 
 Route::controller('organisations','OrganisationsController',[
