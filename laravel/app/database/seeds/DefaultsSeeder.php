@@ -9,15 +9,13 @@ Class DefaultsSeeder extends Seeder {
 		$this->_seedSettings();
 	}
 
-
-
-
 	private function _seedSubscribers()
 	{
 		$accounts = [
 			[
 					 'uname'	=>		'admin',
 					 'pword'	=>		Hash::make('123456'),
+				 'plan_type'	=>		1,
 			   'clear_pword'	=>		'123456',
 				  	 'fname'	=>		'Admin',
 					'status'	=>		1,
@@ -29,6 +27,7 @@ Class DefaultsSeeder extends Seeder {
 					 'uname'	=>		'demo',
 			   'clear_pword'	=>		'123456',
 					 'pword'	=>		Hash::make('123456'),
+				 'plan_type'	=>		1,
 				   	 'fname'	=>		'Demo',
 					'status'	=>		1,
 				  'is_admin'	=>		0,
@@ -43,8 +42,8 @@ Class DefaultsSeeder extends Seeder {
 	private function _seedSettings()
 	{
 		GeneralSettings::truncate();
-		SmtpSettings::truncate();
-		PaypalSettings::truncate();
+		   SmtpSettings::truncate();
+		 PaypalSettings::truncate();
 
 		GeneralSettings::insert([
 				'idle_timeout'		=>		0,
@@ -57,10 +56,11 @@ Class DefaultsSeeder extends Seeder {
 				'status'		=>		0,
 				'sandbox'		=>		0,
 			]);
-		Direcpaysettings::insert([
+		DirecpaySetting::insert([
 				'status'		=>		0,
 				'sandbox'		=>		0,
 			]);
+		
 	}
 
 	private function _seedThemes()
