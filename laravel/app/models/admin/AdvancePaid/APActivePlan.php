@@ -6,7 +6,7 @@ class APActivePlan extends BaseModel {
 	protected $fillable = ['user_id','assigned_on','billing_cycle','billing_unit','last_billed_on',
 							'plan_name','plan_type','limit_id','policy_type','policy_id',
 						'sim_sessions','interim_updates','time_balance','data_balance','aq_invocked',
-						'active_tpl','price'];
+						'active_tpl','price','validity','validity_unit'];
 	public $timestamps = FALSE;
 
 	public function limit()
@@ -19,9 +19,9 @@ class APActivePlan extends BaseModel {
 		return $this->morphTo();
 	}
 
-	public static function AssignPlan($user_id, $plan_id)
+	public static function AssignPlan($user_id, $plan_id, $price = NULL)
 	{
-		DB::transaction(function()use($user_id,$plan_id){
+		DB::transaction(function()use($user_id,$plan_id, $price){
 
 			$oldPlan = APActivePlan::where('user_id',$user_id)
 							->first();
@@ -44,7 +44,12 @@ class APActivePlan extends BaseModel {
 					'time_balance'	=>		NULL,
 					'data_balance'	=>		NULL,
 					 'assigned_on'	=>		date("Y-m-d H:i:s"),
+					 	'validity'	=>		$plan->validity,
+				   'validity_unit'	=>		$plan->validity_unit,
 			];
+			if( $price != NULL ) {
+				$newPlan['price'] = $price;
+			}
 				if( $plan->plan_type == LIMITED ) {
 					$limit = $plan->limit;
 					if( $limit->limit_type == TIME_LIMIT || $limit->limit_type == BOTH_LIMITS )
@@ -102,6 +107,12 @@ class APActivePlan extends BaseModel {
 			   'plan_name'	=>		$oldPlan->plan_name,
 				   'price'	=>		$oldPlan->price,
 		];
+
+		$settings = APSetting::first();
+
+		if( $settings->plan_taxable )
+			$data['tax_rate']	= 	$settings->plan_tax_rate;
+		
 		if( $oldPlan->plan_type == LIMITED ) {
 			$data = array_merge($data, $oldPlan->limit->toArray());
 		}
