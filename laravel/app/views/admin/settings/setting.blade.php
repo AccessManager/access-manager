@@ -1,8 +1,9 @@
 @extends('admin.header_footer')
 <?php
-$general = NULL;
-$smtp = NULL;
-$paypal = NULL;
+	$general = NULL;
+	   $smtp = NULL;
+	 $paypal = NULL;
+$advancepaid = NULL;
 $segment = Request::segment(3);
 // echo $segment; exit;
 switch($segment) {
@@ -17,6 +18,9 @@ switch($segment) {
 	case 'direcpay':
 	case 'paypal':
 		$paypal = 'active';
+			break;
+	case 'advancepaid':
+	$advancepaid = 'active';
 			break;
 }
 ?>
@@ -38,6 +42,9 @@ switch($segment) {
   </li>
   <li class="{{$paypal}}">
   	{{link_to_route('setting.paypal','Payment Gateways')}}
+  </li>
+  <li class="{{$advancepaid}}">
+  	{{link_to_route('setting.advancepaid.form','AdvancePaid Settings')}}
   </li>
   </ul>
 	</div>
