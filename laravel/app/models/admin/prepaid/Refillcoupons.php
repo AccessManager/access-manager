@@ -203,7 +203,7 @@ class Refillcoupons extends BaseModel {
 				DB::table('free_balance')
 					->where(['id'=>$balance->id])
 					->update(['aq_invocked'=>0]);
-				$this->_invokeCoA($balance->uname);
+				self::_invokeCoA($balance->uname);
 		}
 		return $result;
 	}
