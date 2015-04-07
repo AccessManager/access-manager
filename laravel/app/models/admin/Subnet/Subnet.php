@@ -48,6 +48,7 @@ class Subnet extends BaseModel {
 			$framed_ip = SubnetIP::findOrFail($ip_id);
 			SubnetIP::where('user_id', $user_id)->update(['user_id'=>NULL]);
 			$framed_ip->user_id = $user_id;
+			$framed_ip->assigned_on = date('Y-m-d H:i:s');
 			if( ! $framed_ip->save() )	throw new Exception("Could not assign IP.");
 		});
 	}
