@@ -5,7 +5,6 @@ class APInvoice extends BaseModel {
 	protected $table 						= 'ap_invoices';
 	protected $fillable 					= [];
 	public $timestamps 						= FALSE;
-
 	private $lastInvoice 					= NULL;
 	private $plansAmount 					= 0;
 	private $plansTax 						= 0;
@@ -62,15 +61,12 @@ class APInvoice extends BaseModel {
 								->orderby('id','DESC')
 								->select('generated_on')
 								->first();
-		// $log = DB::getQueryLog();
-		// $query = end($log);
-		// pr($query);
-
 	}
 
 	public function previousBalance()
 	{
-		return $this->prev_adjustments?: 0;
+		$amount = $this->prev_adjustments?: 0;
+		return number_format((float)$amount,2,'.','');
 	}
 
 	public function latestPayments()
@@ -86,29 +82,26 @@ class APInvoice extends BaseModel {
 			$q->where('created_at','>',$this->lastInvoice->generated_on);
 
 		$payment = $q->first();
-		return $payment->amount ?: 0;
+		$amount = $payment->amount ?: 0;
+		return number_format((float)$amount,2,'.','');
 	}
 
 	public function balance()
 	{
-		return $this->previousBalance() - $this->latestPayments() 
-		// - $this->discount()
-		;
+		$amount = $this->previousBalance() - $this->latestPayments();
+		return number_format((float)$amount,2,'.','');
 	}
 
 	public function thisMonthsCharges()
 	{
-		return 
-		// $this->balance()
-		// 				+ 
-						$this->plansAmount() 
+		$amount =		$this->plansAmount()
 						+ $this->plansTax() 
 					 	+ $this->recurringProductsAmount() 
 					 	+ $this->recurringProductsTax()
 					 	+ $this->nonRecurringProductsAmount()
-					 	+ $this->nonRecurringProductsTax()
-					 	// - $this->discount()
-					 	;
+					 	+ $this->nonRecurringProductsTax();
+
+		return number_format((float)$amount,2,'.','');
 	}
 
 
@@ -123,12 +116,14 @@ class APInvoice extends BaseModel {
 	public function amountPayableByDueDate()
 	{
 		
-		return $this->thisMonthsCharges() + $this->balance() + $this->discount();
+		$amount = $this->thisMonthsCharges() + $this->balance() + $this->discount();
+		return number_format((float)$amount,2,'.','');
 	}
 
 	public function amountPayableAfterDueDate()
 	{
-		return $this->amountPayableByDueDate() + $this->latePaymentCharges();
+		$amount = $this->amountPayableByDueDate() + $this->latePaymentCharges();
+		return number_format((float)$amount,2,'.','');
 	}
 
 	public function plansAmount()
@@ -138,7 +133,7 @@ class APInvoice extends BaseModel {
 					->select(DB::raw('sum(amount) as amount'))
 					->first();
 
-		return  round($plans->amount, 2);
+		return number_format((float)$plans->amount,2,'.','');
 	}
 
 	public function plansTax()
@@ -148,26 +143,26 @@ class APInvoice extends BaseModel {
 					->select(DB::raw('sum(tax) as tax'))
 					->first();
 
-		return  round($plans->tax, 2);
+		return number_format((float)$plans->tax,2,'.','');
 	}
 
 	public function recurringProductsAmount()
 	{
-		$recurringProdcuts = DB::table('ap_invoice_recurring_products')
+		$recurringProducts = DB::table('ap_invoice_recurring_products')
 								->where('invoice_id', $this->id)
 								->select(DB::raw('sum(amount) as amount'))
 								->first();
 
-		return round($recurringProdcuts->amount, 2);
+		return number_format((float)$recurringProducts->amount,2,'.','');
 	}
 
 	public function recurringProductsTax()
 	{
-		$recurringProdcuts = DB::table('ap_invoice_recurring_products')
+		$recurringProducts = DB::table('ap_invoice_recurring_products')
 								->where('invoice_id', $this->id)
 								->select(DB::raw('sum(tax) as tax'))
 								->first();
-		return round($recurringProdcuts->tax, 2);
+		return number_format((float)$recurringProducts->tax,2,'.','');
 	}
 
 	public function nonRecurringProductsAmount()
@@ -176,7 +171,7 @@ class APInvoice extends BaseModel {
 								->where('invoice_id', $this->id)
 								->select(DB::raw('sum(amount) as amount'))
 								->first();
-		return round($products->amount, 2);
+		return number_format((float)$products->amount,2,'.','');
 	}
 
 	public function nonRecurringProductsTax()
@@ -186,7 +181,7 @@ class APInvoice extends BaseModel {
 								->select(DB::raw('sum(tax) as tax'))
 								->first();
 
-		return round($products->tax, 2);
+		return number_format((float)$products->tax,2,'.','');
 	}
 
 	public function latePaymentCharges()
@@ -196,9 +191,9 @@ class APInvoice extends BaseModel {
 			$totalAmount 		= $this->plansAmount() + $this->recurringProductsAmount() + $this->nonRecurringProductsAmount();
 			$calculatedPenalty 	= $totalAmount * $settings->due_amount_penalty_percent / 100;
 			$finalPenalty 		= $calculatedPenalty > $settings->due_amount_penalty_minimum ? $calculatedPenalty : $settings->due_amount_penalty_minimum;
-			return round($finalPenalty, 2);
+			return number_format((float)$finalPenalty,2,'.','');
 		}
-		return 0;
+		return number_format((float)0,2,'.','');
 	}
 
 	public function discount()
@@ -208,19 +203,13 @@ class APInvoice extends BaseModel {
 				->select(DB::raw('sum(adjustment) as adjustment'))
 				->first();
 
-		return 0 - round($q->adjustment, 2);
+		return number_format((float) 0-($q->adjustment),2,'.','');
 	}
 
 	public static function findByNumber( $invoiceNumber )
 	{
 		return static::where('invoice_number', $invoiceNumber)->first();
 	}
-
-	// public function __construct($attributes = [])
-	// {
-	// 	parent::__construct($attributes);
-
-	// }
 
 }
 //end of file APInvoice.php
