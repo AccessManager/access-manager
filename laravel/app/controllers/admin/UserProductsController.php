@@ -7,7 +7,9 @@ class UserProductsController extends AdminBaseController {
 	{
 		$product = new APRecurringProduct;
 
-		$product->fill(Input::all());
+		$input = Input::all();
+		$input['assigned_on']	= 	date('Y-m-d H:i:s');
+		$product->fill($input);
 		if( $product->save()) {
 			$this->notifySuccess("Product Added.");
 		} else {
