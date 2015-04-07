@@ -66,6 +66,7 @@ class ApProducts extends Migration {
 			$t->timestamp('billed_till');
 			$t->float('amount');
 			$t->float('tax')->default(0);
+			$t->float('rate');
 		});
 
 		Schema::create('ap_invoice_non_recurring_products', function(Blueprint $t){
