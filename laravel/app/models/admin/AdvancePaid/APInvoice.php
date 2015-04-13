@@ -59,14 +59,13 @@ class APInvoice extends BaseModel {
 			$this->lastInvoice = static::where('user_id', $this->account->id)
 								->where('id','<', $this->id)
 								->orderby('id','DESC')
-								->select('generated_on')
 								->first();
 	}
 
 	public function previousBalance()
 	{
-		$amount = $this->prev_adjustments?: 0;
-		return number_format((float)$amount,2,'.','');
+		$this->_fetchLastInvoice();
+		return $this->lastInvoice ? $this->lastInvoice->amountPayableByDueDate() : number_format((float)0,2,'.','');
 	}
 
 	public function latestPayments()
