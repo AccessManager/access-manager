@@ -13,7 +13,7 @@
 							   "php" : ">=5.4",
 				 "laravel/framework" : "4.2.*",
 		 "access-manager/am-radius"  : "1.*",
-		"access-manager/am-invoices" : "1.*",
+		"access-manager/am-invoices" : "0.*",
 	   "access-manager/am-constants" : "0.*",
 	   	 "access-manager/am-helpers" : "*",
 		"edvinaskrucas/notification" : "3.*",
