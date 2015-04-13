@@ -27,6 +27,20 @@ Class AccountsController extends AdminBaseController {
 					->with('plans', $plans);
 	}
 
+	public function getInvoiceByNumber( $number )
+	{
+		$invoice = APInvoice::findOrFail(['invoice_number'=>$number]);
+		$pdf = new PDFInvoice( $invoice );
+		return $pdf->render();
+	}
+
+	public function getInvoiceById( $id )
+	{
+		$invoice = APInvoice::find( $id );
+		$pdf = new PDFInvoice($invoice);
+		return $pdf->render();
+	}
+
 	public function postDisconnect()
 	{
         try {
@@ -195,7 +209,8 @@ Class AccountsController extends AdminBaseController {
 		try{
 			$user_id = Input::get('user_id', 0);
 			$plan_id = Input::get('plan_id', 0);
-			APActivePlan::AssignPlan($user_id, $plan_id);
+			$price = Input::get('price', NULL);
+			APActivePlan::AssignPlan($user_id, $plan_id, $price);
 			$this->notifySuccess("Plan Assigned.");
 		}
 		catch(Exception $e) {
@@ -209,17 +224,77 @@ Class AccountsController extends AdminBaseController {
 	public function getActiveServices($user_id)
 	{
 		$profile = Subscriber::findOrFail($user_id);
-		$rc_history = $profile->rechargeHistory()->paginate(5);
 		$plan = Subscriber::getActiveServices($profile);
 		$framedIP = SubnetIP::where('user_id',$user_id)->first();
 		$framedRoute = UserRoute::where('user_id',$user_id)->first();
-
-		return View::make("admin.accounts.services")
+		switch( $profile->plan_type ) {
+			case FREE_PLAN:
+			case PREPAID_PLAN:
+			$rc_history = Voucher::where('user_id', $user_id)
+							->leftJoin('voucher_limits as l','l.id','=','limit_id')
+							->paginate(5);
+			return View::make("admin.accounts.services")
 					->with('profile', $profile)
 					->with('rc_history', $rc_history)
 					->with('plan', $plan)
 					->with('framedIP',$framedIP)
 					->with('framedRoute', $framedRoute);
+			break;
+			case ADVANCEPAID_PLAN:
+			$rproducts = APRecurringProduct::where('user_id', $profile->id)->get();
+			$nrproducts = APNonRecurringProduct::where('user_id', $profile->id)->get();
+
+			return View::make('admin.accounts.services-ap2')
+					->with('profile', $profile)
+					->with('plan', $plan)
+					->with('framedIP',$framedIP)
+					->with('framedRoute', $framedRoute)
+					->with('rproducts', $rproducts)
+					->with('nrproducts', $nrproducts);
+			
+			break;
+		}
+
+	}
+
+	public function getTransactions( $user_id )
+	{
+		$profile = Subscriber::findOrFail($user_id);
+		$txns = APTransaction::where('user_id', $user_id )
+								->orderby('created_at','DESC')
+								->paginate(10);
+
+		$view = View::make('admin.accounts.ap-transactions',['txns'=>$txns,'profile'=>$profile]);
+
+		$ap_settings = APUserSetting::where('user_id', $user_id)->first();
+			if( $ap_settings != NULL )
+				$view->with('ap_settings', $ap_settings);
+			return $view;
+	}
+
+	public function postAddTransaction()
+	{
+		$txn = new APTransaction;
+
+		$txn->fill(Input::all());
+		if($txn->save()) {
+			$this->notifySuccess('Transaction Successful.');
+		} else {
+			$this->notifyError('Transaction Failed.');
+		}
+		return Redirect::back();
+	}
+
+	public function postAPSettings()
+	{
+		$settings = APUserSetting::firstOrNew(['user_id' => Input::get('user_id',0) ]);
+		$settings->fill( Input::all() );
+		if( $settings->save() ) {
+			$this->notifySuccess('Settings Updated.');
+		} else {
+			$this->notifyError('Settings updation failed.');
+		}
+		return Redirect::back();
 	}
 
 	public function postResetPassword()
