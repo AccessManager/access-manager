@@ -29,7 +29,7 @@ Class AccountsController extends AdminBaseController {
 
 	public function getInvoiceByNumber( $number )
 	{
-		$invoice = APInvoice::findOrFail(['invoice_number'=>$number]);
+		$invoice = APInvoice::where(['invoice_number'=>$number])->firstOrFail();
 		$pdf = new PDFInvoice( $invoice );
 		return $pdf->render();
 	}
