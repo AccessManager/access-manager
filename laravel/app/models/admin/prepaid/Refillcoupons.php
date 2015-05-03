@@ -208,7 +208,7 @@ class Refillcoupons extends BaseModel {
 		return $result;
 	}
 
-	private function _invokeCoA($uname)
+	private static function _invokeCoA($uname)
 	{
 		$user = new RadiusUserAccount($uname);
 				$plan = $user->getActivePlan();
