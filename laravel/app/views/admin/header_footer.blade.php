@@ -30,7 +30,6 @@ if( $segment == 'routers') {
 if( $segment == 'settings' ) {
     $system ='active';
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -272,7 +271,11 @@ if( $segment == 'settings' ) {
         </footer>
 {{HTML::script('public/js/jquery.2.1.min.js')}}
 {{HTML::script('public/js/boostrap.min.js')}}
-@if(Request::segment('2', NULL) == 'subscribers' && Request::segment(3, NULL) == 'profile')
+<?php
+    $segment2 = Request::segment(2, NULL);
+    $segment3 = Request::segment(3, NULL);
+?>
+@if($segment2 == 'subscribers' && ( $segment3 == 'profile' || $segment3 == 'active-services' || $segment3 == 'transactions' ))
     {{HTML::script('public/js/user-profile.js')}}
 @endif
 {{HTML::script('public/js/schema_template_show_hide.js')}}
