@@ -187,7 +187,8 @@ class APInvoice extends BaseModel {
 	public function latePaymentCharges()
 	{
 		$settings = APSetting::first();
-		if( $settings->due_amount_penalty_status ) {
+		// dd($this->thisMonthsCharges());
+		if( $settings->due_amount_penalty_status && $this->thisMonthsCharges() > 0.00 ) {
 			$totalAmount 		= $this->plansAmount() + $this->recurringProductsAmount() + $this->nonRecurringProductsAmount();
 			$calculatedPenalty 	= $totalAmount * $settings->due_amount_penalty_percent / 100;
 			$finalPenalty 		= $calculatedPenalty > $settings->due_amount_penalty_minimum ? $calculatedPenalty : $settings->due_amount_penalty_minimum;
