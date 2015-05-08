@@ -30,6 +30,13 @@
                             {{$errors->first('plan_id',"<span class='help-block'>:message</span>")}}
                         </div>
                     </div>
+                    <div class="form-group {{Form::error($errors, 'price')}}">
+                        <label for="inputEmail" class="col-lg-5 control-label">Price</label>
+                        <div class="col-lg-3">
+                          {{Form::text('price', NULL, ['class'=>'form-control','placeholder'=>"plan price"])}}
+                          {{$errors->first('price',"<span class='help-block'>:message</span>")}}
+                        </div>
+                    </div>
                     <div class="form-group">
                           <div class="col-lg-10 col-lg-offset-5">
                             {{Form::buttons('Assign Plan')}}
