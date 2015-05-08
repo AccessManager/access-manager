@@ -275,7 +275,7 @@ if( $segment == 'settings' ) {
 {{HTML::script('public/js/plan_show_hide.js')}}
 
 {{HTML::script('public/js/bootstrap-clockpicker.min.js')}}
-{{HTML::script('public/js/assign-ip.js')}}
+
 {{HTML::script('public/js/moment.js')}}
 {{HTML::script('public/js/bootstrap-datetimepicker.min.js')}}
 
@@ -334,6 +334,33 @@ $(function(){
         $('#datepicker').datetimepicker({pickTime:false});
         $('#datepicker').on('dp.change',function(e){
             $('#datepicker').data("DateTimePicker").setMinDate(e.date);
+        });
+    });
+</script>
+<script>
+    $(function(){
+        $('#subnet').on('change',function(){
+            var subnet_id = $(this).val();
+            var ip_div = $('#ip-div');
+            var ip_list = $('#ip-list');
+
+            var promise = $.ajax({
+                url : "<?php echo URL::to('json/get-ip-list'); ?>/" + subnet_id,
+                method : 'GET',
+            }).promise();
+            promise.done(function(result){
+                if( ! $.isEmptyObject(result) ) {
+                    ip_div.removeClass('hidden');
+                    ip_list.empty();
+                    // ip_list.append("<option value='0'>NONE</option>");
+                    $.each(result, function(index, obj){
+                        ip_list.append("<option value='"+index+"'>"+obj+"</option>");
+                    });
+                } else {
+                    ip_div.addClass('hidden');
+                    ip_list.val(0);
+                }
+            });
         });
     });
 </script>
