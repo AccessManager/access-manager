@@ -213,7 +213,7 @@
 			</ul>
         </div>
 </div>
-@if($profile->plan_type == PREPAID_PLAN && ! count($rc_history))
+@if($profile->plan_type == PREPAID_PLAN && count($rc_history))
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
   <li class="active"><a href="#recharge" data-toggle="tab">Recent Recharges</a></li>
 </ul>
