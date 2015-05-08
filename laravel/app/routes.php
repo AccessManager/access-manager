@@ -12,15 +12,18 @@
 */
 
 
-Route::get('json/get-ip-list/{id}',function($subnet_id){
-	$list = SubnetIP::where('subnet_id',$subnet_id)
-					->whereNull('user_id')
-					->lists('ip','id');
-	foreach($list as $id => $ip) {
-		$ips[$id] = long2ip($ip);
-	}
-	return Response::json($ips);
-});
+Route::get('json/get-ip-list/{id}',[
+	'as'	=>		'subnet.ip.list',
+				function($subnet_id){
+							$list = SubnetIP::where('subnet_id',$subnet_id)
+											->whereNull('user_id')
+											->lists('ip','id');
+							foreach($list as $id => $ip) {
+								$ips[$id] = long2ip($ip);
+							}
+							return Response::json($ips);
+						}
+	]);
 
 Route::get('send-email','SystemController@sendEmail');
 
