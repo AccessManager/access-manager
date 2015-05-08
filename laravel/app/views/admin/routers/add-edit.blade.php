@@ -24,12 +24,6 @@
 @else
 {{Form::open(['class'=>'form-horizontal','role'=>'form','route'=>'router.add'])}}
 @endif
-<?php
-// $policyError = NULL;
-// if($errors->has('name') ) {
-//   $policyError = 'has-error';
-// }
-?>
 <fieldset>
     <div class="form-group">
           {{Form::label('r_name', 'Router Name',['class'=>'col-lg-4 control-label'])}}
