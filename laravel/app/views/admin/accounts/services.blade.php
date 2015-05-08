@@ -1,5 +1,6 @@
 @extends('admin.header_footer')
 @section('admin_container')
+
 <div class="row">
 	<div class="col-lg-6">
 		<h2>{{{$profile->uname}}}</h2>
@@ -247,6 +248,7 @@
     <table class="table table-striped table-responsive table-hover table-condensed">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Service Plan</th>
                 <th>Recharged On</th>
                 <th>Method</th>
@@ -258,16 +260,30 @@
         </thead>
         <tbody>
             @if(count($rc_history))
-            <?php $i = 1; ?>
+            <?php $i = $rc_history->getFrom(); ?>
             @foreach($rc_history as $voucher)
             <tr>
+                <td>{{$i}}</td>
                 <td>{{$voucher->plan_name}}</td>
                 <td>{{$voucher->updated_at}}</td>
                 <td>{{$voucher->method}}</td>
                 <td>{{$voucher->validity}} {{$voucher->validity_unit}}</td>
-                <td>{{$voucher->plan_type == 1 ? 'Limited' : 'Unlimited';}}</td>
-                <td>{{$voucher->limits->time_limit}} {{$voucher->limits->time_unit}}</td>
-                <td>{{$voucher->limits->data_limit}} {{$voucher->limits->data_unit}}</td>
+                <td>{{$voucher->plan_type == LIMITED ? 'Limited' : 'Unlimited';}}</td>
+
+                <td>
+                @if( $voucher->plan_type == LIMITED && ($voucher->limit_type == TIME_LIMIT || $voucher->limit_type == BOTH_LIMITS ))
+                    {{$voucher->limits->time_limit}} {{$voucher->limits->time_unit}}
+                @else
+                    N/A
+                @endif
+                </td>
+                <td>
+                @if( $voucher->plan_type == LIMITED && ($voucher->limit_type == DATA_LIMIT || $voucher->limit_type == BOTH_LIMITS))
+                    {{$voucher->limits->data_limit}} {{$voucher->limits->data_unit}}
+                @else
+                    N/A
+                @endif
+                </td>
             </tr>
             <?php $i++; ?>
             @endforeach
