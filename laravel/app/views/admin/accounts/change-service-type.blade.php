@@ -4,22 +4,7 @@
 	<div class="col-lg-6">
 		<h2>{{{$profile->uname}}}</h2>
 	</div>
-	<!-- <div class="col-lg-6">
-		<ul class="nav nav-pills pull-right" style='margin-top: 25px;'>
-		  <li class="active"><a href="#">Profile</a></li>
-		  <li><a href="#">IP Addresses</a></li>
-		</ul>
-	</div> -->
 </div>
-<!-- <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-          <h2> 
-            {{$profile->uname}}
-            {{link_to_route('subscriber.index', 'Back to Accounts Listing', NULL, ['class'=>'btn btn-default navbar-right'])}}
-          </h2>
-    </div>
-</div> -->
-
 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
   <li class="active"><a>User Profile</a></li>
   <li>
@@ -33,9 +18,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h2>{{{$profile->fname}}} {{{$profile->lname}}}
-                        <!-- <span class="pull-right"> -->
                             ({{{$profile->uname}}})
-                        <!-- </span> -->
                         : Change Service Type
                     </h2>
                         
@@ -57,6 +40,12 @@
                         <label for="" class='col-lg-4 control-label'>Organisation</label>
                         <div class="col-lg-8">
                             {{Form::select('org_id',$orgs,NULL,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class='col-lg-4 control-label'>Bill Duration Type</label>
+                        <div class="col-lg-8">
+                            {{Form::select('bill_duration_type',['1'=>'Cycle','2'=>'Full'],BILL_DURATION_FULL,['class'=>'form-control'])}}
                         </div>
                     </div>
                     <div class="form-group {Form::error($errors,'billing_cycle')}} {{Form::error($errors,'billing_cycle')}}">
