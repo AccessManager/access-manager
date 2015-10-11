@@ -78,7 +78,10 @@ $all_acct_class = Input::get('alphabet', NULL) == NULL ? 'active' : NULL;
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg12 col-md-12 col-sm-12">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <button href="{{route('clear-stale-sessions')}}" class='btn btn-sm btn-danger'>Clear Stale Sessions</button>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
                     {{$active->appends(Input::except('page'))->links()}}
                 </div>
             </div>
