@@ -121,6 +121,11 @@ Route::group( ['prefix'=>'admin-panel',
 			return Redirect::route('subscriber.active');
 		}]);
 
+	Route::get('clear-stale-sessions', [
+		'as'	=>		'clear-stale-sessions',
+		'uses'	=>		'AccountsController@clearStaleSessions',
+		]);
+
 	Route::get('logout',[
 		'as'	=>		'admin.logout',
 		function(){
