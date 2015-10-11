@@ -217,7 +217,8 @@ Class AccountsController extends AdminBaseController {
 	public function getAssignPlan($user_id)
 	{
 		$profile = Subscriber::findOrFail($user_id);
-		$plans = Plan::lists('name','id');
+		$plans = Plan::lists('name','id')
+					->orderby('name');
 		return View::make("admin.accounts.assign-plan")
 					->with('profile', $profile)
 					->with('plans', $plans);
