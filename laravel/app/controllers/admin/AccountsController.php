@@ -27,6 +27,24 @@ Class AccountsController extends AdminBaseController {
 					->with('plans', $plans);
 	}
 
+	public function clearStaleSessions()
+	{
+		$sessions = RadAcct::where('acctstoptime', NULL)
+					->get();
+
+		foreach( $sessions as $session ) {
+			$startTime = strtotime($session->acctstarttime);
+			if( $startTime + $session->acctsessiontime + 86400 < time() ) {
+				$stopTime = date('Y-m-d H:i:s', $startTime + $session->acctsessiontime );
+
+				$session->acctstoptime = $stopTime;
+
+				$session->save();
+			}
+		}
+		return Redirect::back();
+	}
+
 	public function getInvoiceByNumber( $number )
 	{
 		$invoice = APInvoice::where(['invoice_number'=>$number])->firstOrFail();
@@ -106,12 +124,13 @@ Class AccountsController extends AdminBaseController {
 			$account = Subscriber::create($input);
 
 			$this->notifySuccess("New Subscriber added successfully: <b>{$input['uname']}</b>");
+			return $this->getProfile($account->id);
 		}
 		catch(Exception $e) {
 			$this->notifyError($e->getMessage());
 			return Redirect::route(self::HOME);
 		}
-		return Redirect::route(self::HOME);
+		
 	}
 
 	public function getEdit($id)
@@ -327,6 +346,7 @@ Class AccountsController extends AdminBaseController {
 	public function postChangeServiceType()
 	{
 		try {
+			// pr(Input::all());
 			$user_id = Input::get('user_id');
 			$user = Subscriber::findOrFail( $user_id );
 			$disconnect = new stdClass;
@@ -343,6 +363,7 @@ Class AccountsController extends AdminBaseController {
 					$input['expiration'] = date("Y-m-d H:i:s", strtotime($input['expiration']));
 					$billing->fill($input);
 					if( ! $billing->save() )	throw new Exception("Failed to save billing cycle details.");
+					// pr($billing->toArray());
 				}
 				if( $user->plan_type == FREE_PLAN ) {
 					Subscriber::updateFreePlan($user->id);
