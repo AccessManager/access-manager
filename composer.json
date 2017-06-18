@@ -1,13 +1,13 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "access-manager/access-manager",
+    "description": "The Hotspot Management System",
+    "keywords": ["access manager","wifi", "hotspot", "mikrotik"],
     "license": "MIT",
     "type": "project",
+    "homepage": "http://accessmanager.in",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.4.*",
-        "laravel/tinker": "~1.0"
+        "access-manager/base": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -16,12 +16,8 @@
     },
     "autoload": {
         "psr-4": {
-            "AM3\\Modules\\": "Modules"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
+            "AM3\\Modules\\": "Modules",
+            "AM3\\Base\\": "Modules/Base/src"
         }
     },
     "scripts": {

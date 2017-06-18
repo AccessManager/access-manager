@@ -11,7 +11,7 @@
 |
 */
 
-$app = new \AM3\Modules\Base\Extended\Application(
+$app = new \AM3\Base\Extended\Application(
     realpath(__DIR__.'/../')
 );
 
@@ -28,22 +28,19 @@ $app = new \AM3\Modules\Base\Extended\Application(
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    AM3\Modules\Base\Kernel\Http::class
+    AM3\Base\Kernel\Http::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    AM3\Modules\Base\Kernel\Console::class
+    AM3\Base\Kernel\Console::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    \AM3\Modules\Base\Exception\Handler::class
+    \AM3\Base\Exception\Handler::class
 );
 
-//$app->bind('path.public', function() {
-//    return __DIR__ . "/../html";
-//});
 /*
 |--------------------------------------------------------------------------
 | Return The Application
