@@ -9,16 +9,6 @@
         "php": ">=5.6.4",
         "access-manager/base": "dev-master"
     },
-    "require-dev": {
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "AM3\\Base\\": "Modules/Base/src"
-        }
-    },
     "scripts": {
         "post-root-package-install": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
