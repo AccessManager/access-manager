@@ -16,7 +16,6 @@
     },
     "autoload": {
         "psr-4": {
-            "AM3\\Modules\\": "Modules",
             "AM3\\Base\\": "Modules/Base/src"
         }
     },
