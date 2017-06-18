@@ -1,6 +1,0 @@
-laravel/vendor
-.gitignore
-composer.lock
-*.sublime-*
-laravel/app/config
-public/img/internet-login
