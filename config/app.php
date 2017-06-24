@@ -136,7 +136,7 @@ return [
     */
 
     'providers' => [
-        \AM3\Base\Providers\BaseServiceProvider::class,
+        \AccessManager\Base\Providers\BaseServiceProvider::class,
     ],
 
 ];

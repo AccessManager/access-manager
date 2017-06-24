@@ -11,7 +11,7 @@
 |
 */
 
-$app = new \AM3\Base\Extended\Application(
+$app = new \AccessManager\Base\Extended\Application(
     realpath(__DIR__.'/../')
 );
 
@@ -28,17 +28,17 @@ $app = new \AM3\Base\Extended\Application(
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    AM3\Base\Kernel\Http::class
+    \AccessManager\Base\Kernel\Http::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    AM3\Base\Kernel\Console::class
+    \AccessManager\Base\Kernel\Console::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    \AM3\Base\Exception\Handler::class
+    \AccessManager\Base\Exception\Handler::class
 );
 
 /*
