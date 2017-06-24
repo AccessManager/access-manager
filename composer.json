@@ -19,12 +19,10 @@
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize",
-          "php artisan vendor:publish --tag=public --force"
         ],
       "post-update-cmd" :[
         "Illuminate\\Foundation\\ComposerScripts::postInstall",
         "php artisan optimize",
-        "php artisan vendor:publish --tag=public --force"
       ]
     },
     "config": {
