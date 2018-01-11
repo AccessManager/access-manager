@@ -1,4 +1,6 @@
-# Access Manager
+ # Access Manager - Subscriber Manager for ISPs
+ 
+
 Access Manager is a centralised radius based subscriber management system for 
 WiFI Hotspot operators and Small/Medium ISPs. It supports Mikrotik as a NAC. It includes most of the features
 related to subscriber management. Including subscriber account, free/paid subscriptions,
@@ -106,7 +108,7 @@ In this file we need to make two modifications:
 2. add following code block somewhere within <Virtualhost>....</Virtualhost> block.
 ```
 <Directory /home/am/access-manager/html>
-    Options Indexex FollowSymLinks
+    Options Indexes FollowSymLinks
     AllowOverride all
     Require all granted
 </Directory>
