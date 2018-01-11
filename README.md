@@ -1,20 +1,20 @@
-#Access Manager
+# Access Manager
 Access Manager is a centralised radius based subscriber management system for 
 WiFI Hotspot operators and Small/Medium ISPs. It supports Mikrotik as a NAC. It includes most of the features
 related to subscriber management. Including subscriber account, free/paid subscriptions,
 prepaid voucher generation and limiting subscription services based on
 data/time limit among others.
 
-###Supported NAC/Router Vendors:
+### Supported NAC/Router Vendors:
 - Mikrotik
 
 **FOLLOWING INSTALLATION GUIDE IS FOR ACCESS MANAGER 3.0-BETA, WHICH IS YET TO BE RELEASED.**
 
-##Installation
+## Installation
 Access Manager is written in PHP (Laravel Framework) and uses MySQL for database storage. Thus requires one time setup
 process to be followed. And this is going to be a lengthy one. And with that in mind, lets get started. 
 
-###Prerequisite
+### Prerequisite
 - Basic Knowledge of Linux Operating System
 
 Though Access Manager can be installed on any linux flavor, 
@@ -160,4 +160,4 @@ program = "/usr/bin/php /home/am/access-manager/artisan am:account %Z"
 ```
 
 
-Hope you enjoy the project. :\)
+**Hope you enjoy the project. :\)**
