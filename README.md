@@ -34,7 +34,7 @@ $ sudo apt upgrade
 Next install the required packages:
 
 ```
-$ sudo apt install apache2, libapache2-mod-php, php7.0, php7.0-mbstring, php7.0-mysql, mysql-server, freeradius, freeradius-mysql, freeradius-utils
+$ sudo apt install apache2 libapache2-mod-php php7.0 php7.0-mbstring php7.0-mysql mysql-server freeradius freeradius-mysql freeradius-utils
 ```
 **NOTE:** 
 During the installation you'll be asked to set root password for MySQL server, choose a strong password
