@@ -63,7 +63,7 @@ and `pwd` will output the path to current working directory, if you want to veri
 Now, to download Access Manager project issue following command:
 
 ```
-$ composer create-project access-manager/access-manager=3.0-BETA
+$ composer create-project access-manager/access-manager -s beta
 ```
 
 Above mentioned command will download Access Manager 3.0-BETA & its dependencies. We'll also need to create a database
