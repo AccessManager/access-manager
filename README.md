@@ -79,10 +79,12 @@ mysql> create database acmanager;
 
 Press `ctrl+d` to get out of MySQL prompt.
 
-Still being in the home directory issue following command to get into project directory:
+Still being in the home directory issue following commands to get into project directory 
+& make the storage directory writeable:
 
 ```
 $ cd access-manager
+$ chmod 777 -R storage
 ```
 
 Since this is a fresh install, run following command for configuration setup.
