@@ -7,7 +7,7 @@
     "homepage": "http://accessmanager.in",
     "require": {
         "php": ">=5.6.4",
-        "access-manager/base": "dev-master"
+        "access-manager/base": "3.*"
     },
     "scripts": {
         "post-root-package-install": [
